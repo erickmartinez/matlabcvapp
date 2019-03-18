@@ -5,6 +5,8 @@ function MD=fcncallback_ext(app,MUnb,MD)
 % MUnb: The measurement unit (1,2,3)
 % MD: A structure containing all the data
 % Find parameters
+% Need to store a variable that will indicate that all the measurements
+% are completed, so that we can break the endless time loop
 Arduino=app.HW(MUbn).Arduino;
 stressbiasTime=MD(MUnb).MDdata.stressbiasTime;
 ArdPins=MD(MUbn).ArdP; % Arduino pin numbers corresponding to the POGO pins
