@@ -1,4 +1,9 @@
 function MD=fcncallback_ext(app,MUnb,MD)
+% Callback function to be executed every x seconds
+% Arguments:
+% app: The app designer 
+% MUnb: The measurement unit (1,2,3)
+% MD: A structure containing all the data
 % Find parameters
 Arduino=app.HW(MUbn).Arduino;
 stressbiasTime=MD(MUnb).MDdata.stressbiasTime;
