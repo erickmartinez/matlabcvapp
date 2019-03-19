@@ -19,6 +19,8 @@ MD(3).Plots.Temp=app.TempTime_3;
 %%
 hold(MD(MUnb).Plots.Temp,'on') % Handle to the temperature figure of the Measurement Unit number MUnb.
 plot(MD(MUnb).Plots.Temp,temp_t/3600,TempTC,'-o','LineWidth',2,'Color',[1,.4,0]);
+
+% Log values (CREATE A FUNCTION TO LOG VALUES)
 MD(MUnb).ExpData.log.T = [MD(MUnb).ExpData.log.T, TempTC]; %Record temperature values for each MU
 MD(MUnb).ExpData.log.Ttime = [MD(MUnb).ExpData.log.t, temp_t]; %Record temperature time values for each MU
 % Log Keithley bias based on the state of the relays?

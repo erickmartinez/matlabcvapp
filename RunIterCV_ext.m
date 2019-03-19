@@ -1,7 +1,6 @@
 function [th, Ih, MD] = RunIterCV_ext(app,MD,V,CVprogram,PreBias_1,PreBiasTime_1,th,Ih,PinState,ArdP,LampSet,LampColor,CVPlots,PlotCVby2,MUnb,MD) % Run Iterative CV Measurement
 % Find parameters
 Arduino=app.HW(MUbn).Arduino;
-setbiastime=MD(MUnb).MDdata.setbiastime;
 ArdPins=MD(MUbn).ArdP; % Arduino pin numbers corresponding to the POGO pins
 setCoolT=MD(HPnb).ExpData.Setup.TempC;
 setStressT=MD(HPnb).ExpData.Setup.TempH;
@@ -39,12 +38,15 @@ for p = 1:length(PinState) %For each pin
         
         % here add the isstresscompleted function to turn off (or on?) the other hotplates if needed.
         % After each pin has been measured, check if all hotplates have been held at the target temperature for the set step duration. If one of them has, turn them off and let them wait.
-        % Also check if the temperature has reached room temperature
+        
         for MUnb=1:3
-            [stress_status]=isstresscompleted(app,iHP,HPdata); % is any hotplate ready to stop stressing?
-            % Is any hotplate ready to stop temperature rampup?
+            % Check if bias is ready to be stopped on each measurement unit
+            MD=stress_completed_ext(app, MD, MUnb);
+            % Is any hotplate ready to stop temperature rampup (is bias ready to be started)?
             %%% code here
             % Is any hotplate ready to stop temperature cool down (ie turn off the fan)?
+            
+            % Also check if the temperature has reached room temperature
         end
     end
     writeDigitalPin(app.Arduino,char("D"+num2str(ArdP(p))),0) %Turn off desired pogo-pin after it has been measured
