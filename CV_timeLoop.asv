@@ -1,0 +1,11 @@
+function CV_timeLoop(app)
+    % Check if the time interval exists, else define it locally
+    
+    tic;
+    i = 1;
+    while i == 1
+        if rem(toc,0.3333) == 0
+            MD=fcncallback_ext(app,MUnb,MD)
+        end
+    end
+end

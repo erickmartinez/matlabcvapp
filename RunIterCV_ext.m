@@ -51,5 +51,6 @@ for p = 1:length(PinState) %For each pin
     end
     writeDigitalPin(app.Arduino,char("D"+num2str(ArdP(p))),0) %Turn off desired pogo-pin after it has been measured
 end
+%%% Is the following line ever executed?
 FlatbandFitting(app,PinState,PlotCVby2); %Fit flatband for pin
 % End of function

@@ -1,0 +1,8 @@
+function CV_stopProcedure(app)
+% Stops all processes in the setup and disconnects devices
+    measurementUnits = [1,2,3];
+    for mu=1:length(measurementUnits)
+        % Disconnect all POGO pins
+        availablePOGOPins   = MD(mu).ArdP; % Arduino pin numbers corresponding to the POGO pins 
+        pinState            = MD(mu).PinState; % an array determining if the pin is active or not
+        
