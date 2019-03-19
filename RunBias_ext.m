@@ -13,6 +13,8 @@ else %If regular stress step
         end
     end
 end
+
+%% MOVE THIS PART TO STARTPROC
 delete(instrfind('Name','VISA-GPIB0-25')) %Delete visa object to Keithley 2401 (K2401) if found
 k=visa('agilent', 'GPIB0::25::INSTR'); %Define visa connection to K2401
 set(k, 'InputBufferSize', 64*1024); %Set data buffer size (important to read out all current data)
@@ -33,24 +35,27 @@ fprintf(k, ":SOUR:VOLT "+Vstress) %Source Bias Voltage
 fprintf(k, ':SOUR:VOLT:MODE FIX') %Set Voltage Source Sweep Mode
 fprintf(k, ":SOUR:DEL .1") %100ms Source Delay
 
-fprintf(k, ":FORM:ELEM CURR") %Select Data Collecting Item Current
+fprintf(k, ":FORM:ELEM CURR") %Select Data Collecting Item Current (FORMAT CURRENT, see short-form rule p.338 Keithley 2400.). Remove to also read voltage?
 fprintf(k, ":OUTP ON") %Turn On Source Output
 
 t=[];
 tcurr = [];
 I = [];
 
+%% MOVE THIS PART TO FCNCALLBACK
 for j = 1:tstep:tIstress %For every timestep until maximum stress time
     pause(tstep-0.327592); %Pause for timestep duration during high bias
     I = [I str2double(strsplit(query(k, ":READ?"),','))']; %Trigger Measurement, Request Data After Timestep Wait
     tcurr = [tcurr toc]; %Increment time for current array
     temp_t = toc;
-    TempTC = getTC(app); %Get thrmocouple temperature
+    TempTC = getTC(app); %Get thermocouple temperature
     
     plot(app.It_1,tcurr/3600,I,'ko-','LineWidth',2) %Add History of Time & Plot Current Vs. Time
     plot(app.TempTime_1,temp_t/3600,TempTC,'-o','LineWidth',2,'Color',[1,.4,0]) %Plot/Update thermocouple temperature vs time
 end
 t = tcurr;
+
+%% MOVE THIS PART TO THE INFINITE LOOP, WHEN THE PROGRAM ENDS
 fprintf(k, ":OUTP OFF") %Turn Off Source Output
 delete(k) %Delete K2401 Object
 clear k %Cleare K2401 Object from Workspace

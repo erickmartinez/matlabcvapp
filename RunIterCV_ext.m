@@ -1,4 +1,4 @@
-function [th Ih] = RunIterCV_ext(app,V,CVprogram,PreBias_1,PreBiasTime_1,th,Ih,PinState,ArdP,LampSet,LampColor,CVPlots,PlotCVby2,MUnb) % Run Iterative CV Measurement
+function [th, Ih, MD] = RunIterCV_ext(app,MD,V,CVprogram,PreBias_1,PreBiasTime_1,th,Ih,PinState,ArdP,LampSet,LampColor,CVPlots,PlotCVby2,MUnb,MD) % Run Iterative CV Measurement
 % Find parameters
 Arduino=app.HW(MUbn).Arduino;
 setbiastime=MD(MUnb).MDdata.setbiastime;
@@ -34,7 +34,7 @@ for p = 1:length(PinState) %For each pin
             MD(MUnb).ExpData.Pin(p).R = [MD(MUnb).ExpData.Pin(p).R Rmeas]; %Save resistance data in pin struct
             MD(MUnb).ExpData.Pin(p).V = [MD(MUnb).ExpData.Pin(p).V  V']; %Save voltage data in pin struct
             % TO DO: make sure the curves are plotted in the correct CV window. CVPlots are defined at the beginning of StartProc. app.CV1_3, app.CV2_3, app.CV3_3, app.CV4_3, app.CV5_3 for MU3.
-            PlotCV(app,MD(MUnb).ExpData.Pin(p).C,MD(MUnb).ExpData.Pin(p).V,MD(MUnb).Plots.CV(p)); %Plot CV curve
+            MD=PlotCV(app,MD(MUnb).ExpData.Pin(p).C,MD(MUnb).ExpData.Pin(p).V,MD(MUnb).Plots.CV(p),MUnb); %Plot CV curve and temperature
         end
         
         % here add the isstresscompleted function to turn off (or on?) the other hotplates if needed.
