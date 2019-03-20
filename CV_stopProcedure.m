@@ -17,6 +17,10 @@ function CV_stopProcedure(app)
             warndlg(sprintf('Error disconnecting Keithley on arduino %d',...
                 arduino_number),'Arduino error');
         end
+        % Turn the fan off
+        arduinoTurnFanOff(app,mu);
+        % Turn the hot plate off
+        success = setHotPlateTemperature(app,mu,25.6);
     end
 end
         
