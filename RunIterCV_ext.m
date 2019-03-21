@@ -17,8 +17,10 @@ for p = 1:length(PinState) %For each pin
             writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0) %Turn off desired pogo-pin
             if(app.PreBiasTime_1.Value ~= 0) %If there is a prebias
                 % TO DO: Modify RunBias function
-                [I_temp t_temp TC_temp TC_time_temp] = RunBias(app, MD, MUnb, 1, p) %Run prebias on pin % To change because rusBias will be modified. Only toggle the switch for a given amount of time .
+                MD = RunBias(app, MD, MUnb, 1, p); %Run prebias on pin % To change because rusBias will be modified. Only toggle the switch for a given amount of time .
                 % TO DO: find when to log data
+                % Remove the following data log as this will be in RunBias
+                % already
                 app.TC = [TC_temp app.TC]; %Record temperature values
                 app.TC_time = [TC_time_temp app.TC_time]; %Record temperature time values
                 Ih = [Ih I_temp]; %Record current values
