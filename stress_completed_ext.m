@@ -13,8 +13,8 @@ time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recor
 if(time_inc>=stressBiasTime && getTc(app,MUnb)<=setStressT+3 && getTc(app,MUnb)>=setStressT-3) % Allow error of +/- 3 °C in temperature. Temperature condition to avoid turning on the fan if ramping has already started or if room T has been reached
     if(getTC(app,MUnb)<=SetCoolT+Err && getTc(app,MUnb)>=SetCoolT-Err)
         writeDigitalPin(Arduino,'D11',1); %Turn on Fan if current T is different from cooling T, ie case where stressing and cooling T identical (verify pin number).
+        MD(MUnb).MDdata_fanflag=1; % Set fan flag to 1 after the fan has been turned on
     end
-    MD(MUnb).MDdata_fanflag=1; % Set fan flag to 1 after the fan has been turned on
     % Stop hotplate
     setHPTemp(app, app.HW(MUnb).HP, setCoolT); % verify the name of HP1 cooling temperature. Need to define setCoolT in the main.
     setHPTemp(app, app.HW(MUnb).HP, setCoolT);

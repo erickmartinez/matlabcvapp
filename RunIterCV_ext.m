@@ -10,13 +10,14 @@ meas_flag=MD(MUnb).MDdata.meas_flag;
 PreBias=MD(MUnb).ExpData.Setup.PreBias;
 PreBiasTime=MD(MUnb).ExpData.Setup.PreBiasTime;
 IterM = MD(MUnb).ExpData.Setup.IterM ; %Amount of repeated measurements per stress iteration
+
 for p = 1:length(PinState) %For each pin
     for j = 1:IterM %For each repeated measure
         if(PinState(p)) %If pin is available
             writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0) %Turn off desired pogo-pin
             if(app.PreBiasTime_1.Value ~= 0) %If there is a prebias
                 % TO DO: Modify RunBias function
-                [I_temp t_temp TC_temp TC_time_temp] = RunBias(app, PreBias_1,PreBiasTime_1*60,(PreBiasTime*60)/2,th,Ih,PinState,ArdP,LampSet,LampColor,1,p) %Run prebias on pin % To change because rusBias will be modified. Only toggle the switch for a given amount of time .
+                [I_temp t_temp TC_temp TC_time_temp] = RunBias(app, MD, MUnb, 1, p) %Run prebias on pin % To change because rusBias will be modified. Only toggle the switch for a given amount of time .
                 % TO DO: find when to log data
                 app.TC = [TC_temp app.TC]; %Record temperature values
                 app.TC_time = [TC_time_temp app.TC_time]; %Record temperature time values
@@ -36,17 +37,24 @@ for p = 1:length(PinState) %For each pin
             MD=PlotCV(app,MD(MUnb).ExpData.Pin(p).C,MD(MUnb).ExpData.Pin(p).V,MD(MUnb).Plots.CV(p),MUnb); %Plot CV curve and temperature
         end
         
-        % here add the isstresscompleted function to turn off (or on?) the other hotplates if needed.
-        % After each pin has been measured, check if all hotplates have been held at the target temperature for the set step duration. If one of them has, turn them off and let them wait.
-        
+        % After each pin has been measured, check:
+        % 1) Whether all hotplates have been held at the target temperature
+        % and bias has been applied for the set step duration. If one of
+        % them has, turn them off and let them wait (stress_completed_ext
+        % function
+        % 2) Whether a hotplate is ready to stop temperature rampup
+        % 3) Whether room temperature has been reached on a hotplate
         for MUnb=1:3
-            % Check if bias is ready to be stopped on each measurement unit
+            % STRESS COMPLETED? Check if bias is ready to be stopped on each measurement unit
             MD=stress_completed_ext(app, MD, MUnb);
+            % BIAS START?
             % Is any hotplate ready to stop temperature rampup (is bias ready to be started)?
-            %%% code here
-            % Is any hotplate ready to stop temperature cool down (ie turn off the fan)?
-            
-            % Also check if the temperature has reached room temperature
+            % Note that bias won't be started on the current hotplate
+            % because the measurement flag is still 0, as the CV
+            % measurement hasn't been completed on all pins
+            MD=RunBias_ext(app, MD, MUnb, 0, 9); % 0 because no prebias, pin number set to any number (not used if no prebias)
+            % TURN FAN OFF? Is any hotplate ready to stop temperature cool down (ie turn off the fan)?
+            MD=fanoff_ext(app, MD, MUnb);
         end
     end
     writeDigitalPin(app.Arduino,char("D"+num2str(ArdP(p))),0) %Turn off desired pogo-pin after it has been measured

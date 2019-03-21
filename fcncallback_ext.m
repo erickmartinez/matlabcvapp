@@ -19,42 +19,20 @@ PreBias=MD(MUnb).ExpData.Setup.PreBias;
 PreBiasTime=MD(MUnb).ExpData.Setup.PreBiasTime;
 % etc
 %% BIAS START? %% Check if biasing needs to be started %% This will become a function because needs to be called in RunIterCV
-if(getTC(app,MUnb)<=setStressT+Err && getTc(app,nHP)>=setStressT-Err && meas_flag==1) % If the measurement temperature is reached and the measurement flag is 1 (measurement already performed)
-    WriteDigitalPin(app.HW(MUnb).Arduino,'A0',0); % Normally closed position, Keithley connected
-    % Turn on all pins if they have been activated by the user
-    for p = 1:length(PinState) % Parse through all  pins
-        if(PinState(p)) % If the pin has been activated by the user
-            writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1 , i.e. on
-        end
-    end
-    % Record bias starting time
-    BtLength=length(MD(MUnb).MDdata.startbiastime); % Current length of the table containing bias starting time for each cycle
-    MD(MUnb).MDdata.startbiastime(BtLength+1)=toc; % Add the bias starting time for the current cycle
-    %  Record log values (CREATE A FUNCTION TO RECORD THE LOGGED VALUES,
-    %  BASED ON PLOTCV_EXT)
-    MD(MUnb).ExpData.log.T = [MD(MUnb).ExpData.log.T, TempTC]; %Record temperature values for each MU
-    MD(MUnb).ExpData.log.Ttime = [MD(MUnb).ExpData.log.t, temp_t]; %Record temperature time values for each MU
-    BvalLength=length(MD(MUnb).ExpData.log.Vbias); % Length of the table containing the log bias values
-    % Add reading of the Keithley voltage MD(MUnb).ExpData.log.V(BvalLength+1) = % Read Keithley voltage
-    I_time=toc; % Record time corresponding to the current value
-    MD(1).ExpData.log.I = [MD(1).ExpData.log.I str2double(strsplit(query(HW(1).KEITH, ":READ?"),','))']; % Record current value from Keithley (always in MU 1 for all MUs, because same value for all MUs). HW(1).KEITH is the visa object.
-    MD(1).ExpData.log.Itime = [MD(1).ExpData.log.Itime I_time]; % Record time (always in MU 1 for all MUs, because current is measured for all MUs)
-    % Turn meas flag to 0 after the bias was started
-    MD(MUnb).MDdata.meas_flag=0;
-    % Record temperature and time?
-end
+MD=RunBias_ext(app, MD, MUnb, 0, 9); % 0 because no prebias, pin number set to any number, not used
 
 %% STRESS COMPLETED? %% Check if stress has been completed to stop bias and start ramping down temperature
 MD=stress_completed_ext(app, MD, MUnb);
 
 %% TURN FAN OFF? %% Check if the fan can be turned off. Conditions: fan flag is on (=1) and cooling temperature has been reached. This will become a function because needs to be called in RunIterCV
-if(getTc(app,MUnb)<=SetCoolT+Err && MD(MUnb).MDdata_fanflag==1)
-    writeDigitalPin(Arduino,'D11',0); %Turn off Fan (verify pin number)
-    pause(10); % Pause 10 s to let temperature stabilize after the fan has been turned off
-    MD(MUnb).MDdata_fanflag=0; % Set fan flag to 0 after the fan has been turned off
-end
+MD=fanoff_ext(app, MD, MUnb);
+
 %% START MEASUREMENT? %% Check if a measurement can be started
-if(stress_status && getTC(app,MUnb)<=SetCoolT+Err && getTc(app,MUnb)>=SetCoolT-Err && meas_flag==0)
+% If both bias and measurement are performed at room temperature, a
+% measurement would start before the end of the bias step unless a
+% condition is set on the time elapsed since biasstarttime.
+time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recorded bias starting time for this measurement unit
+if(time_inc>=stressBiasTime && getTC(app,MUnb)<=SetCoolT+Err && getTc(app,MUnb)>=SetCoolT-Err && meas_flag==0) % What if both bias and measurement are performed at room temperature? add a stress completed flag
     % In case the fan is still on, turn it off
     if(MD(MUnb).MDdata_fanflag==1)
         writeDigitalPin(Arduino,'D11',0); %Turn off Fan (verify pin number)
