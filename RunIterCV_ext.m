@@ -56,6 +56,8 @@ for p = 1:length(PinState) %For each pin
             MD=RunBias_ext(app, MD, MUnb, 0, 9); % 0 because no prebias, pin number set to any number (not used if no prebias)
             % TURN FAN OFF? Check any hotplate is ready to stop temperature cool down (ie turn off the fan)?
             MD=fanoff_ext(app, MD, MUnb);
+            % LOG VALUES
+            MD=logvalues_ext(app, MD, MUnb);
         end
     end
     writeDigitalPin(app.Arduino,char("D"+num2str(ArdP(p))),0) %Turn off desired pogo-pin after it has been measured

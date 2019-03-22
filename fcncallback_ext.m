@@ -50,4 +50,8 @@ if(time_inc>=stressBiasTime && getTC(app,MUnb)<=SetCoolT+Err && getTc(app,MUnb)>
     setHPTemp(app,app_HP,setStressT) %Turn on heating & set to stress temperature of desired hotplate
     MD(MUnb).MDdata.meas_flag=1; % Set flag to 1 after measurement completed
 end
+
+%% Log values
+MD=logvalues_ext(app, MD, MUnb);
+
 % End function
