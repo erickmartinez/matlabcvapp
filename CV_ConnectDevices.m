@@ -30,6 +30,7 @@ function HW = CV_ConnectDevices(app)
             fopen(HW(i).HP); 
             %Set timeout to 1 second
             set(HW(i).HP, 'timeout',1); 
+            turnHPLampOnOff(app,i,1);
         catch ME
             display(ME.error);
             success = 0;
@@ -46,6 +47,7 @@ function HW = CV_ConnectDevices(app)
             HW(i).Arduino = arduino(COM,'Uno','Libraries','SPI');
             %Define connection through arduino to thermocouple
             HW(i).Therm = spidev(Arduino,'D10','Bitrate',5e6); 
+            turnArduinoLampOnOff(app,i,1);
         catch ME
             success = 0;
             display(ME.error);
@@ -74,6 +76,7 @@ function HW = CV_ConnectDevices(app)
         fprintf(k, ':SOUR:VOLT:MODE FIX') %Set Voltage Source Sweep Mode
         fprintf(k, ":SOUR:DEL .1") %100ms Source Delay
         fprintf(k, ":FORM:ELEM CURR") %Select Data Collecting Item Current (FORMAT CURRENT, see short-form rule p.338 Keithley 2400.). Remove to also read voltage?
+        app.StatusLampKeithley.Color = [0 1 0];
     catch ME
         success = 0;
         display(ME.message);
@@ -90,6 +93,7 @@ function HW = CV_ConnectDevices(app)
         set(v, 'InputBufferSize', 64*1024); 
         set(v,'Timeout',120); %Set visa timeout
         fopen(v); %Open visa
+        app.StatusLampImpedance.Color = [0 1 0];
     catch ME
         success = 0;
         display(ME.message);
@@ -106,12 +110,9 @@ function HW = CV_ConnectDevices(app)
             HW(i).KEITH = k;
             HW(i).IMPA  = v;
         end
-        app.DisconnectedLampLabel.Text = 'Connected';
-        app.DisconnectedLamp.Color = [0 1 0];
     else
         HW = 0;
-        app.DisconnectedLampLabel.Text = 'Disconnected';
-        app.DisconnectedLamp.Color = [0 0 0];
+        CV_DisconnectDevices(app);
     end
 end
 

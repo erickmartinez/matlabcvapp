@@ -1,5 +1,7 @@
 function CV_stopProcedure(app)
 % Stops all processes in the setup and disconnects devices
+    % Set the stopFlag to 1 to avoid taking more measurements
+    app.stopFlag = 1;
     measurementUnits = [1,2,3];
     for mu=1:length(measurementUnits)
         % The handle to the arduino
