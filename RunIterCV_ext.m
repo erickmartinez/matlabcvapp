@@ -54,8 +54,11 @@ for p = 1:length(PinState) %For each pin
             end
         end
         writeDigitalPin(app.Arduino,char("D"+num2str(ArdP(p))),0) %Turn off desired pogo-pin after it has been measured
-    else % if the stop flag is 1 (stopping the app)
-        
+    else 
+        % If stopFlag is set to 1, disconnect all POGO pins, disconnect Impedance
+        % Analyzer, turn off all the hotplates, turn off the fans, and delete
+        % visa objects
+        CV_RebootSystem(app);
     end
 end
 %%% Is the following line ever executed?

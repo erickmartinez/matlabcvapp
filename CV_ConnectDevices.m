@@ -14,12 +14,14 @@ function HW = CV_ConnectDevices(app)
 
     % First make sure all devices are disconnected
     CV_DisconnectDevices(app);
+    message0='Initializing Instruments... Please Wait';
     success = 1;
-    
+    wb = waitbar(0,message0);
+    pause(0.5);
     for i=1:3
         % Print waitbar
         message1=['Initializing Instruments:Hotplate ',num2str(i),'... Please Wait'];
-        wb = waitbar((2*i-1)/8,message1);
+        waitbar((2*i-1)/8,wb,message1);
 
         % Connect the hot plates
         COM_HP = ['COM',num2str(i+8)]; 
@@ -31,8 +33,9 @@ function HW = CV_ConnectDevices(app)
             %Set timeout to 1 second
             set(HW(i).HP, 'timeout',1); 
             turnHPLampOnOff(app,i,1);
-        catch ME
-            display(ME.error);
+            pause(0.5);
+        catch e
+            display(e.message);
             success = 0;
         end
 
@@ -48,9 +51,10 @@ function HW = CV_ConnectDevices(app)
             %Define connection through arduino to thermocouple
             HW(i).Therm = spidev(Arduino,'D10','Bitrate',5e6); 
             turnArduinoLampOnOff(app,i,1);
-        catch ME
+            pause(0.5);
+        catch e
             success = 0;
-            display(ME.error);
+            display(e.message);
         end
     end
     % Print waitbar
@@ -77,11 +81,11 @@ function HW = CV_ConnectDevices(app)
         fprintf(k, ":SOUR:DEL .1") %100ms Source Delay
         fprintf(k, ":FORM:ELEM CURR") %Select Data Collecting Item Current (FORMAT CURRENT, see short-form rule p.338 Keithley 2400.). Remove to also read voltage?
         app.StatusLampKeithley.Color = [0 1 0];
-    catch ME
+    catch e
         success = 0;
-        display(ME.message);
+        display(e.message);
     end
-
+    pause(0.5);
     % Print waitbar
     message4=['Initializing Instruments:Impedance Analyzer ... Please Wait'];
     waitbar(1,wb,message4);
@@ -94,9 +98,9 @@ function HW = CV_ConnectDevices(app)
         set(v,'Timeout',120); %Set visa timeout
         fopen(v); %Open visa
         app.StatusLampImpedance.Color = [0 1 0];
-    catch ME
+    catch e
         success = 0;
-        display(ME.message);
+        display(e.message);
     end
     
     pause(0.5);
@@ -110,9 +114,12 @@ function HW = CV_ConnectDevices(app)
             HW(i).KEITH = k;
             HW(i).IMPA  = v;
         end
+        % Turn the connected flag on
+        app.devicesConnected = 1;
     else
         HW = 0;
         CV_DisconnectDevices(app);
+        app.PowerSwitch.Value = 'Off';
     end
 end
 

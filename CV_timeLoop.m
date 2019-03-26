@@ -26,6 +26,7 @@ function CV_timeLoop(app,MD,CVProgram)
             for mu=1:length(measurementUnits)
                 MD = fcncallback_ext(app,mu,MD);
             end
+            % If all the measurements are completed leave the while loop
             if Md(1).MDdata.finish_flag == 1 && Md(2).MDdata.finish_flag == 1 ...
                     && Md(3).MDdata.finish_flag == 1
                 app.stopFlag = 1;
@@ -34,12 +35,10 @@ function CV_timeLoop(app,MD,CVProgram)
         end
     end
     
-    
-    %% Add here the function close_setup
-    % call function close_setup
-    
-    
-    CV_stopProcedure(app);
+    % When finished, disconnect all POGO pins, disconnect Impedance
+    % Analyzer, turn off all the hotplates, turn off the fans, and delete
+    % visa objects
+    CV_RebootSystem(app);
     app.stopFlag = 0;
     app.idleFlag = 1;
 end

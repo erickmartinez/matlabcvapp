@@ -1,12 +1,19 @@
-function CV_stopProcedure(app)
-% Stops all processes in the setup and disconnects devices
-    % Set the stopFlag to 1 to avoid taking more measurements
-    app.stopFlag = 1;
-    measurementUnits = [1,2,3];
-    
+function CV_RebootSystem(app)
+% CV_RebootSystem
+% Disconnects all the POGO pins, disconnects the impedance analyzer, turns
+% off all the hot plates and fans.
+% 
+% Parameters
+% ----------
+% app : obj
+%   a handle to the app designer GUI
+
     %%% This part needs to be called in RunIterCV: before each pin measurement, check the stopflag. If it is 1, 
-    %%% break the Ru
-    %%% close_setup
+    %%% break the for loop of RunIterCV and call close_setup.
+    %%% close_setup also needs to be called at the end of the while loop
+    %%% need to close all visa objects here too
+    %%% function close_setup
+    measurementUnits = [1,2,3];
     for mu=1:length(measurementUnits)
         % The handle to the arduino
         arduino_handle=app.HW(mu).Arduino;
@@ -28,5 +35,5 @@ function CV_stopProcedure(app)
         % Turn the hot plate off
         success = setHotPlateTemperature(app,mu,25.6);
     end
+    CV_DisconnectDevices(app);
 end
-        
