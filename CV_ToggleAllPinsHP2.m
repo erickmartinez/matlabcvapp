@@ -1,7 +1,7 @@
 function CV_ToggleAllPinsHP2(app,value)
     colorOn     = [0.49,0.18,0.56];
     colorOff    = [.9, .9, .9];
-    if(value)
+    if strcmp(value,'On')
         app.P1_2.Text = "ON";
         app.P2_2.Text = "ON";
         app.P3_2.Text = "ON";
