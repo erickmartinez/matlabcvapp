@@ -8,7 +8,7 @@ function MD=fcncallback_ext(app,MUnb,MD,CVProgram)
 % Need to store a variable that will indicate that all the measurements
 % are completed, so that we can break the endless time loop
 Arduino=app.HW(MUbn).Arduino;
-stressBiasTime=MD(MUnb).MDdata.stressBiasTime;
+stressBiasTime_sec=MD(MUnb).MDdata.dtime; % dtime is the stress bias time converted in seconds (in startproc)
 ArdPins=MD(MUbn).ArdP; % Arduino pin numbers corresponding to the POGO pins
 setCoolT=MD(HPnb).ExpData.Setup.TempC;
 setStressT=MD(HPnb).ExpData.Setup.TempH;
@@ -32,7 +32,7 @@ MD=fanoff_ext(app, MD, MUnb);
 % measurement would start before the end of the bias step unless a
 % condition is set on the time elapsed since biasstarttime.
 time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recorded bias starting time for this measurement unit
-if(time_inc>=stressBiasTime && getTC(app,MUnb)<=SetCoolT+Err && getTc(app,MUnb)>=SetCoolT-Err && meas_flag==0) % What if both bias and measurement are performed at room temperature? add a stress completed flag
+if(time_inc>=stressBiasTime_sec && getTC(app,MUnb)<=SetCoolT+Err && getTc(app,MUnb)>=SetCoolT-Err && meas_flag==0) % What if both bias and measurement are performed at room temperature? add a stress completed flag
     % In case the fan is still on, turn it off
     if(MD(MUnb).MDdata_fanflag==1)
         writeDigitalPin(Arduino,'D11',0); %Turn off Fan (verify pin number)
