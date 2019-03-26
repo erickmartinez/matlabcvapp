@@ -33,6 +33,12 @@ function CV_timeLoop(app,MD,CVProgram)
             end
         end
     end
+    
+    
+    %% Add here the function close_setup
+    % call function close_setup
+    
+    
     CV_stopProcedure(app);
     app.stopFlag = 0;
     app.idleFlag = 1;
