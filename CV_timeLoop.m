@@ -1,18 +1,39 @@
-function CV_timeLoop(app)
-    % A loop with a time counter to run the code as a function of time
-    % Check if the time interval exists, else define it locally
-    if exist app.timeInterval
-        dt = app.timeInterval;
-    else
-        dt = 60; % seconds
+function CV_timeLoop(app,MD,CVProgram)
+% CV_timeLoop(app,MD)
+% A loop with a time counter to run the code every dt seconds
+% 
+% Parameters
+% ----------
+% app : obj
+%   A handle to the app designer GUI
+% MD : struct
+%   The measurement data structure
+% CVProgram : struct
+%   A structure with the commands sent to the impedance analyzer
+
+    % Define the period of evaluation
+    dt = app.loopInterval;
+    % Start measuring the time
     tic;
+    % The index of the measurement units
     measurementUnits = [1,2,3];
+    % Set the idle flag to zero, indicating that there's an experiment
+    % running
+    app.idleFlag = 0;
+    % Start an 'infinite' while loop
     while app.stopFlag ~= 1
         if rem(toc,dt) == 0
             for mu=1:length(measurementUnits)
                 MD = fcncallback_ext(app,mu,MD);
             end
+            if Md(1).MDdata.finish_flag == 1 && Md(2).MDdata.finish_flag == 1 ...
+                    && Md(3).MDdata.finish_flag == 1
+                app.stopFlag = 1;
+                break;
+            end
         end
     end
     CV_stopProcedure(app);
+    app.stopFlag = 0;
+    app.idleFlag = 1;
 end
