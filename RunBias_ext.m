@@ -8,7 +8,16 @@ if(IsPreBias) % IF PREBIAS STEP
     for p = 1:length(PinState) %Parse through all  pins
         writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdinsP(p))),0); %Set all abailable pins to 0 or off (although should already be)
     end
-    writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(PreBiasPin))),1); %Set PreBias pin to 1 or on %%% Need to check and correct this
+    writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(PreBiasPin))),1); %Set PreBias pin to 1 or on
+    % Bias for the prebias time
+    PreBiasTime=MD(MUnb).ExpData.Setup.PreBiasTime;
+    writeDigitalPin(app.HW(MUnb).Arduino,'A0',0); % Normally closed position, Keithley connected and biasing the pin which is on
+    biasstart=toc;
+    while(toc-biasstart<PreBiasTime)
+        pause(0.5);        
+    end
+    writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(PreBiasPin))),0); % turn off prebias pin 
+    
 else % IF REGULAR STRESS STEP
     if(getTC(app,MUnb)<=setStressT+Err && getTc(app,MUnb)>=setStressT-Err && meas_flag==1) % If the measurement temperature is reached and the measurement flag is 1 (measurement already performed)
         writeDigitalPin(app.HW(MUnb).Arduino,'A0',0); % Normally closed position, Keithley connected

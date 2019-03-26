@@ -1,4 +1,4 @@
-function [th, Ih, MD] = RunIterCV_ext(app,MD,V,CVprogram,PreBias_1,PreBiasTime_1,th,Ih,PinState,ArdP,LampSet,LampColor,CVPlots,PlotCVby2,MUnb,MD) % Run Iterative CV Measurement
+function MD = RunIterCV_ext(app,CVprogram,LampSet,LampColor,MUnb,MD) % Run Iterative CV Measurement
 % Find parameters
 Arduino=app.HW(MUbn).Arduino;
 ArdPins=MD(MUbn).ArdP; % Arduino pin numbers corresponding to the POGO pins
@@ -15,17 +15,9 @@ for p = 1:length(PinState) %For each pin
     for j = 1:IterM %For each repeated measure
         if(PinState(p)) %If pin is available
             writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0) %Turn off desired pogo-pin
-            if(app.PreBiasTime_1.Value ~= 0) %If there is a prebias
+            if(PreBiasTime ~= 0) %If there is a prebias
                 % TO DO: Modify RunBias function
-                MD = RunBias(app, MD, MUnb, 1, p); %Run prebias on pin % To change because rusBias will be modified. Only toggle the switch for a given amount of time .
-                % TO DO: find when to log data
-                % Remove the following data log as this will be in RunBias
-                % already
-                app.TC = [TC_temp app.TC]; %Record temperature values
-                app.TC_time = [TC_time_temp app.TC_time]; %Record temperature time values
-                Ih = [Ih I_temp]; %Record current values
-                th = [th t_temp]; %Record current time values
-                hold(app.It_1,'on')
+                MD = RunBias_ext(app, MD, MUnb, 1, p); %Run prebias on pin
             end
             WriteDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Connect impedance analyzer and disconnect Keithley
             writeDigitalPin(app.Arduino,char("D"+num2str(ArdP(p))),1); %Turn on desired pogo-pin
@@ -63,5 +55,5 @@ for p = 1:length(PinState) %For each pin
     writeDigitalPin(app.Arduino,char("D"+num2str(ArdP(p))),0) %Turn off desired pogo-pin after it has been measured
 end
 %%% Is the following line ever executed?
-FlatbandFitting(app,PinState,PlotCVby2); %Fit flatband for pin
+MD=FlatbandFitting(app, MD, MUnb); %Fit flatband for pin
 % End of function

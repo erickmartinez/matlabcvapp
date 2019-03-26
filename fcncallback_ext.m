@@ -44,6 +44,7 @@ if(time_inc>=stressBiasTime && getTC(app,MUnb)<=SetCoolT+Err && getTc(app,MUnb)>
     [th Ih] = RunIterCV(app,V,Prog_CV,PreBias,PreBiasTime,th,Ih,PinState,ArdP,LampSet,LampColor,CVPlots,PlotCVby2, MUnb) %Take iterative CV measurement
     % Start ramping up HP temperature after measurement and set meas_flag to 1 (cut and copy code from RunIterCV here)
     % After the measurement, all pins of the hotplate should be off. Then toggle relay to Keithley (to allow LCR measurements of another hotplate)
+    
     writeDigitalPin(Arduino,'A0',0) % Turn off the toggle switch board, ie connect to the Keithley
     % Start ramping temperature of the hotplate to the stress temperature
     setHPTemp(app,app_HP,setStressT) %Turn off desired hotplate
@@ -53,5 +54,8 @@ end
 
 %% Log values
 MD=logvalues_ext(app, MD, MUnb);
+
+%% Save data
+saveMDdata(app, MD, MUnb);
 
 % End function

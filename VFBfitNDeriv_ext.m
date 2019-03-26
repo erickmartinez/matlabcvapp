@@ -1,4 +1,4 @@
-function VFBfitNDeriv_ext(app,p,m,IterM_1,PlotCVby2_p)
+function VFBfitNDeriv_ext(app,p,m)
 Cs = app.P(p).C; % C in struct for pin p
 Vs = app.P(p).V; % V in struct for pin p
 Vi=Vs(1):0.001:Vs(end); %Interpolated Voltage Bias Range
