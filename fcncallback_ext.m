@@ -1,4 +1,4 @@
-function MD=fcncallback_ext(app,MUnb,MD)
+function MD=fcncallback_ext(app,MUnb,MD,CVProgram)
 % Callback function to be executed every x seconds
 % Arguments:
 % app: The app designer 
@@ -41,7 +41,7 @@ if(time_inc>=stressBiasTime && getTC(app,MUnb)<=SetCoolT+Err && getTc(app,MUnb)>
     end
     writeDigitalPin(Arduino,'A0',1) % Turn on the toggle switch board, ie connect to the impedance analyzer
     % Run the CV measurement (will measure all pins that were selected by the user)
-    [th Ih] = RunIterCV(app,V,Prog_CV,PreBias,PreBiasTime,th,Ih,PinState,ArdP,LampSet,LampColor,CVPlots,PlotCVby2, MUnb) %Take iterative CV measurement
+    [th Ih] = RunIterCV(app,CVprogram,LampSet,LampColor,MUnb,MD) %Take iterative CV measurement
     % Start ramping up HP temperature after measurement and set meas_flag to 1 (cut and copy code from RunIterCV here)
     % After the measurement, all pins of the hotplate should be off. Then toggle relay to Keithley (to allow LCR measurements of another hotplate)
     

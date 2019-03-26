@@ -1,8 +1,13 @@
-function VFBfitNDeriv_ext(app,p,m)
-Cs = app.P(p).C; % C in struct for pin p
-Vs = app.P(p).V; % V in struct for pin p
+% function VFBfitNDeriv(app,p,m,IterM,PlotCVby2_p)
+function MD=VFBfitNDeriv_ext(app, p, m, MD, MUnb)
+
+PlotCVby2_p=MD(MUnb).Plots.CVby2(p); % PlotCVby2_p is the handle to the derivative plot corresponding to pin p
+
+Cs = MD(MUnb).ExpData.Pin(p).C; % C in struct for pin p
+Vs = MD(MUnb).ExpData.Pin(p).V; % V in struct for pin p
 Vi=Vs(1):0.001:Vs(end); %Interpolated Voltage Bias Range
-t_off = tInSec(app, string(app.t_offset_unit_1.Value), app.TimeOffset_1.Value); % Definte time-Offset in seconds
+
+t_off = tInSec(app, string(app.t_offset_unit_1.Value), app.TimeOffset_1.Value); % Define time-Offset in seconds
 app.P(p).tfb = 0:app.dtime:((m-1)*app.dtimema); % Set flatband time array
 app.P(p).tfb = app.P(p).tfb+t_off; % Add time-offset
 set(PlotCVby2_p, 'ColorOrder', jet((app.Iter_tot_1.Value+1)))

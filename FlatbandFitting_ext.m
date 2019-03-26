@@ -9,9 +9,10 @@ for p=1:length(PinState) %For all pins
     if(PinState(p)) %If the pin is available
         if (DerPeaks) %If fitting type set to derivative peaks (which is the default)
             m = size(MD(MUnb).ExpData.Pin(p).C,2)/IterM; % Set # of total iterations so far (Flatbandfitting is called once all the iterations of a given cycle have been performed)
-            VFBfitNDeriv(app,p,m,IterM,PlotCVby2(p)) % Fit for flatband (data automatically updated within function)
+            VFBfitNDeriv(app, p, m, MD, MUnb) % Fit for flatband (data automatically updated within function)
         else %If fitting type is linear 1/C^2 (NOT USED)
-            %%%%% This part not valid
+            %%%%% This part not valid (should only use the derivative
+            %%%%% method)
             [Cfit, Vfit,Vfbtemp] = VFBfitN(app, C,Vall,IterM,PlotCVby2(p)) %Fit for flatband
             app.P(p).Vfb = mean(Vfbtemp'); %Update flatband data
             app.P(p).VfbStd = std(Vfbtemp');
