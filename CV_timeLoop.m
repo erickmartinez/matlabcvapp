@@ -24,10 +24,10 @@ function CV_timeLoop(app,MD,CVProgram)
     while app.stopFlag ~= 1
         if rem(toc,dt) == 0
             for mu=1:length(measurementUnits)
-                MD = fcncallback_ext(app,mu,MD);
+                MD = fcncallback_ext(app,mu,MD,CVProgram);
             end
             % If all the measurements are completed leave the while loop
-            if Md(1).MDdata.finish_flag == 1 && Md(2).MDdata.finish_flag == 1 ...
+            if MD(1).MDdata.finish_flag == 1 && MD(2).MDdata.finish_flag == 1 ...
                     && Md(3).MDdata.finish_flag == 1
                 app.stopFlag = 1;
                 break;

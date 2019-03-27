@@ -41,7 +41,7 @@ if(time_inc>=stressBiasTime_sec && getTC(app,MUnb)<=SetCoolT+Err && getTc(app,MU
     end
     writeDigitalPin(Arduino,'A0',1) % Turn on the toggle switch board, ie connect to the impedance analyzer
     % Run the CV measurement (will measure all pins that were selected by the user)
-    [th Ih] = RunIterCV(app,CVprogram,LampSet,LampColor,MUnb,MD) %Take iterative CV measurement
+    MD = RunIterCV(app,CVprogram,LampSet,LampColor,MUnb,MD); %Take iterative CV measurement
     % Start ramping up HP temperature after measurement and set meas_flag to 1 (cut and copy code from RunIterCV here)
     % After the measurement, all pins of the hotplate should be off. Then toggle relay to Keithley (to allow LCR measurements of another hotplate)
     

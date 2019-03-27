@@ -18,14 +18,14 @@ function CV_RebootSystem(app)
         % The handle to the arduino
         arduino_handle=app.HW(mu).Arduino;
         % Disconnect all POGO pins
-        pogoPins   = MD(mu).ArdP; % Arduino pin numbers corresponding to the POGO pins 
+        pogoPins   = MD(mu).ArdP; % Arduino pin numbers corresponding to the POGO pins (can be any numbers and does not necessarily start at 1)
         for pPIN = 1:length(pogoPins)
-            arduinoTurnPinOff(app,mu,pPIN);
+            arduinoTurnPinOff(app,mu,pogoPins(pPIN));
         end
         % Return all Keithley/Impedance analyzer relay switches to the
         % normal position
         try
-            WriteDigitalPin(arduino_handle,'A0',1); % Normally closed position, Keithley connected
+            WriteDigitalPin(arduino_handle,'A0',0); % Normally closed position, Keithley connected
         catch
             warndlg(sprintf('Error disconnecting Keithley on arduino %d',...
                 arduino_number),'Arduino error');
