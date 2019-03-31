@@ -11,11 +11,3 @@ Plot.YLabel.String = 'Capacitance (pF)';
 
 % Log values
 MD=logvalues_ext(app, MD);
-
-%% TO DEFINE IN STARTPROC
-MD(1).Plots.Temp=app.TempTime_1; 
-MD(2).Plots.Temp=app.TempTime_2;
-MD(3).Plots.Temp=app.TempTime_3;
-%%
-hold(MD(MUnb).Plots.Temp,'on') % Handle to the temperature figure of the Measurement Unit number MUnb.
-plot(MD(MUnb).Plots.Temp,temp_t/3600,TempTC,'-o','LineWidth',2,'Color',[1,.4,0]);
