@@ -7,7 +7,7 @@ setStressT=MD(HPnb).ExpData.Setup.TempH;
 PinState=MD(HPnb).PinState;
 Err=MD(MUnb).MDdata.Err;
 meas_flag=MD(MUnb).MDdata.meas_flag;
-PreBias=MD(MUnb).ExpData.Setup.PreBias;
+PreBias=MD(MUnb).ExpData.Setup.PreBiasValue;
 PreBiasTime=MD(MUnb).ExpData.Setup.PreBiasTime;
 IterM = MD(MUnb).ExpData.Setup.IterM ; %Amount of repeated measurements per stress iteration
 
@@ -24,6 +24,7 @@ for p = 1:length(PinState) %For each pin
                 writeDigitalPin(app.Arduino,char("D"+num2str(ArdP(p))),1); %Turn on desired pogo-pin
                 % LampSet(p) = LampColor(p); %Turn on pin lamp
                 [Cmeas, Rmeas, Vmeas] = RunProgCV(app, CVprogram); %Run CV measurement
+                MD(MUnb).MDdata.CVStartTime=[MD(MUnb).MDdata.CVStartTime, toc];
                 % Preallocate the structures at the beginning based on the max number of iterations
                 MD(MUnb).ExpData.Pin(p).C = [MD(MUnb).ExpData.Pin(p).C Cmeas]; %Save capacitance data in pin struct
                 MD(MUnb).ExpData.Pin(p).R = [MD(MUnb).ExpData.Pin(p).R Rmeas]; %Save resistance data in pin struct
