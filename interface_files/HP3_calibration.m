@@ -2,12 +2,14 @@
 % (as the set temperature on a hotplate is different from the temperature
 % measured on its surface with a thermocouple)
 
-clear all
+% clear all
+% 
+% HP = InitHP()
+% [Ard Therm] = InitArd()
+HP=HP3;
+Therm=Therm3;
 
-HP = InitHP()
-[Ard Therm] = InitArd()
-
-figure(1)
+figure(2)
 
 THP=[];
 TC=[];
@@ -21,9 +23,11 @@ ax2 = axes('Position',ax1_pos,...
     'XAxisLocation','top',...
     'Color','none');
 %}
-for T=30:5:300
+% for T=30:3:120
+for T=30:3:120
     setHPTemp(HP,T) %Turns HP on & sets it to Tset
-    pause(10*60-2.7637)
+%     pause(10*60-2.7637)
+pause(6*60-2.7637)
     
     THP = [getHPParam(HP) THP];
     TC = [getTC(Therm) TC];
@@ -48,13 +52,13 @@ for T=30:5:300
     
     setHPTemp(HP,T) %Turns HP off
 end
-writeDigitalPin(Ard,'D3',1) %Turn on Fan
+% writeDigitalPin(Ard,'D3',1) %Turn on Fan
 
 %% Fitting
-figure(5)
-Tfit = 25:.1:350
-SetFit = polyfit(TC,Tset,2)
-SetFitEval = polyval(SetFit,Tfit)
+figure(6)
+Tfit = 25:.1:100;
+SetFit = polyfit(TC,Tset,2);
+SetFitEval = polyval(SetFit,Tfit);
 
 plot(TC,THP,'bo-','LineWidth',2)
 hold on
@@ -66,9 +70,9 @@ xlabel("Arduino Thermocouple Temperature (C)")
 title("Calibration") 
 legend("Hotplate Read Temperature","Hotplate Set Temperature","Fit")
 
-a1 = SetFit(1);
-a2 = SetFit(2);
-b = SetFit(3);
-Tnew = a1*(25)^2+a2*(25)+b
+a1_HP3 = SetFit(1);
+a2_HP3 = SetFit(2);
+b_HP3 = SetFit(3);
+Tnew_HP3 = a1_HP3*(25)^2+a2_HP3*(25)+b_HP3;
 
 
