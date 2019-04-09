@@ -1,4 +1,4 @@
-function Export_CV_1Pushed_ext(app, event)
+function Export_CV_1Pushed_ext(app)
 clf; shg;
 try
     PinState = [app.P1_1.Value, app.P2_1.Value, app.P3_1.Value, app.P4_1.Value];

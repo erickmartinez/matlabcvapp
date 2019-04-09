@@ -1,4 +1,4 @@
-function Export_byC2_1Pushed_ext(app, event)
+function Export_byC2_1Pushed_ext(app)
 
 clf; shg;
 try

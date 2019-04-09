@@ -41,17 +41,17 @@ if(getTC(app,MUnb)<=CoolT+Err && getTc(app,MUnb)>=CoolT-Err && meas_flag==0 && s
     if(time_inc>=stressBiasTime_sec || MD(MUnb).MDdata.startbiastime(end)==0) % For the first measurement, startbiastime is set to 0 for initialization
         % In case the fan is still on, turn it off
         if(MD(MUnb).MDdata_fanflag==1)
-            writeDigitalPin(Arduino,'D11',0); %Turn off Fan (verify pin number)
+            writeDigitalPin(Arduino,'A1',0); %Turn off Fan (verify pin number)
             pause(10); % Pause 10 s to let temperature stabilize after the fan has been turned off
             MD(MUnb).MDdata_fanflag=0; % Set fan flag to 0 after the fan has been turned off
         end
-        writeDigitalPin(Arduino,'A0',1) % Turn on the toggle switch board, ie connect to the impedance analyzer
+        writeDigitalPin(Arduino,'A0',0) % Turn on the toggle switch board (NEEDS TO BE AT LOW POTENTIAL TO BE ON), ie connect to the impedance analyzer
         % Run the CV measurement (will measure all pins that were selected by the user)
         MD = RunIterCV(app,CVprogram,LampSet,LampColor,MUnb,MD); %Take iterative CV measurement
         % Start ramping up HP temperature after measurement and set meas_flag to 1 (cut and copy code from RunIterCV here)
         % After the measurement, all pins of the hotplate should be off. Then toggle relay to Keithley (to allow LCR measurements of another hotplate)
         
-        writeDigitalPin(Arduino,'A0',0) % Turn off the toggle switch board, ie connect to the Keithley
+        writeDigitalPin(Arduino,'A0',1) % Turn off the toggle switch board (NEEDS TO BE AT HIGH POTENTIAL TO BE ON), ie connect to the Keithley
         % Start ramping temperature of the hotplate to the stress temperature
         setHPTemp(app,app_HP,MD(MUnb).ExpData.Setup.CalTempH) %Turn off desired hotplate
         setHPTemp(app,app_HP,MD(MUnb).ExpData.Setup.CalTempH) %Turn on heating & set to stress temperature of desired hotplate

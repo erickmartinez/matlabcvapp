@@ -20,7 +20,7 @@ for p = 1:length(PinState) %For each pin
                     % TO DO: Modify RunBias function
                     MD = RunBias_ext(app, MD, MUnb, 1, p); %Run prebias on pin
                 end
-                WriteDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Connect impedance analyzer and disconnect Keithley
+                WriteDigitalPin(app.HW(MUnb).Arduino,'A0',0); % Connect impedance analyzer and disconnect Keithley
                 writeDigitalPin(app.Arduino,char("D"+num2str(ArdP(p))),1); %Turn on desired pogo-pin
                 % LampSet(p) = LampColor(p); %Turn on pin lamp
                 [Cmeas, Rmeas, Vmeas] = RunProgCV(app, CVprogram); %Run CV measurement

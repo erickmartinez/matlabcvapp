@@ -12,7 +12,7 @@ Err=MD(MUnb).MDdata.Err;
 time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recorded bias starting time for this measurement unit
 if(time_inc>=biastime_sec && getTc(app,MUnb)<=StressT+3 && getTc(app,MUnb)>=setStressT-3) % Allow error of +/- 3 °C in temperature. Temperature condition to avoid turning on the fan if ramping has already started or if room T has been reached
     if(getTc(app,MUnb)>=CoolT+Err) % if T is larger than cool T, the fan will be turned on
-        writeDigitalPin(Arduino,'D11',1); %Turn on Fan if current T is different from cooling T, ie case where stressing and cooling T identical (verify pin number).
+        writeDigitalPin(Arduino,'A1',1); %Turn on Fan if current T is different from cooling T, ie case where stressing and cooling T identical (verify pin number).
         MD(MUnb).MDdata_fanflag=1; % Set fan flag to 1 after the fan has been turned on
     end
     MD(MUnb).MDdata.stress_completed_flag=1; % Set stress completed flag to 1

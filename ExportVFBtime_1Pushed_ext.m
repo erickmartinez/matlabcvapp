@@ -1,4 +1,4 @@
-function ExportVFBtime_1Pushed_ext(app, event)
+function ExportVFBtime_1Pushed_ext(app)
 clf; shg;
 try
     VfbTimePlotColors = ["bo-","yo-","go-","mo-"];
