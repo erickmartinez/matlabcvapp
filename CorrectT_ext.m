@@ -28,4 +28,6 @@ switch MUnb
         % Calibration 4/5/2019
         %                 a1,a2,b
         %                 0.000287543659539014	0.867801163146551	13.2453441588129
+    otherwise
+        error('Wrong hotplate number entered');
 end

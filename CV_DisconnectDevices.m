@@ -5,6 +5,12 @@ function CV_DisconnectDevices(app)
 %   ----------
 %   app : Obj
 %       A handle to the app designer GUI
+
+% Tables containing COM port numbers for each hotplate
+HP_COM_table=[9,5,10];
+% Tables containing COM port numbers for each Arduino
+Ard_COM_table=[8,7,6];
+
     message0 = 'Disconnecting Instruments... Please Wait';
     wb = waitbar(0,message0);
     pause(0.5);
@@ -18,7 +24,7 @@ function CV_DisconnectDevices(app)
                 waitbar((2*i-1)/8,wb,message1);
                 
                 % Disconnect the hot plates
-                COM_HP = ['COM',num2str(i+8)]; % CHECK THE PORT NUMBERS FOR EACH HOTPLATE
+                COM_HP = ['COM',num2str(HP_COM_table(i))];
                 CloseHP_ext(app, HW, i, COM_HP);
                 turnHPLampOnOff(app,i,0);
                 pause(0.5);
@@ -28,7 +34,7 @@ function CV_DisconnectDevices(app)
                 waitbar((2*i)/8,wb,message2);
 
                 % Disconnect the arduinos
-                COM_ARd = ['COM',num2str(i+5)]; % CHECK THE PORT NUMBERS FOR EACH ARDUINO
+                COM_ARd = ['COM',num2str(Ard_COM_table(i))];
                 delete(instrfind({'Port'},{COM_ARd})) %Delete existing object if there is one
                 turnArduinoLampOnOff(app,i,0);
                 pause(0.5);

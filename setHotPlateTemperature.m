@@ -9,10 +9,10 @@ function [success] = setHotPlateTemperature(app,hotplateNumber,temperature)
     LT = mod(temperature,25.6)*10; %Set low temp value 
     CumSum = 178+HT+LT; % Obtain checksum value
     CumSum = mod(CumSum,256);
-    arry = [254,178,HT,LT,0, CumSum]; %Serial bit/byte to send to hotplate
+    array = [254,178,HT,LT,0, CumSum]; %Serial bit/byte to send to hotplate
     try
-        for j=1:length(arry) %Iterature through serial array with 50ms waitime
-            fwrite(hotplate_handle,arry(j),'uint8'); %Write to hotplate
+        for j=1:length(array) %Iterature through serial array with 50ms waitime
+            fwrite(hotplate_handle,array(j),'uint8'); %Write to hotplate
             pause(.05)
         end
         out = fread(hotplate_handle); %Read out hotplate response
