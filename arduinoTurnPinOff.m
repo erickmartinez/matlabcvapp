@@ -1,4 +1,5 @@
 function arduinoTurnPinOff(app,arduinoNumber,pinNumber)
+% arduinoTurnPinOff
 % Turn the specified pin on on the arduino
 % Parameters
 % ----------

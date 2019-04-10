@@ -12,18 +12,7 @@ function MD = RunIterCV_ext(app,CVprogram,LampSet,LampColor,MUnb,MD)
 % LampSet: int ?
 %   The number of the lamp to change the color from ????
 % LampColor : float[3]
-%   The new color of the lamp???
-% MUnb : int
-%   The number of the selected measurement unit 1, 2 or 3
-% MD : struct
-%   A data structure that contains the experimental data results. Results
-%   from the measurements will be appended to this structure.
-%
-% Returns
-% -------
-% MD : struct
-%   A data structure that contains the experimental data results
-
+%   The color to be change
 % Find parameters
 Arduino=app.HW(MUnb).Arduino;
 ArdPins=MD(MUnb).ArdP; % Arduino pin numbers corresponding to the POGO pins
@@ -90,5 +79,5 @@ end
 %%% Is the following line ever executed?
 MD=FlatbandFitting(app, MD, MUnb); %Fit flatband for pin
 % End of function
+
 clear Arduino
-end

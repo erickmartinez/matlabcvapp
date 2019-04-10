@@ -44,15 +44,13 @@ for mu=1:3
             % Plot the results in two different figures to avoid having 8
             % subplots in the same figure.
             if q <= 4
-                % Selects the axis for the first CV figure
+                 % Select the axis for the first figure
                 cvax = haxCV1;
             else
-                % Selects the axis of the second CV figure
+                % Selects the axis of the second CV fi
                 cvax = haxCV2;
             end
-            % Select the subplot
             subplot(rows,cols,mod(q,4));
-            % plot each line with the color defined previously
             for i=1:nLines
                 plot(cvax,V(:,i),C(:,i),'Color',c(i,:),'LineWidth',2);
             end
@@ -60,8 +58,8 @@ for mu=1:3
             title( cvax,"Capacitance vs. Voltage (Bias = "+stressBias+"V, T = "+stressTemp+" °C)");
             xlabel(cvax,'Voltage (V)');
             ylabel(cvax,'Capacitance (pF)');
+            set(gca, 'FontSize',14)
         end % pinStates(q) ends 
-        set(gca, 'FontSize',14)
     end % p = 1:length(PinState) ends
     
     

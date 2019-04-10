@@ -7,7 +7,8 @@ function CV_timeLoop(app,MD,CVProgram)
 % app : obj
 %   A handle to the app designer GUI
 % MD : struct
-%   The measurement data structure
+%   The data structure with the experimental results. All new measurements
+%   will be appended to this data structure
 % CVProgram : struct
 %   A structure with the commands sent to the impedance analyzer
 

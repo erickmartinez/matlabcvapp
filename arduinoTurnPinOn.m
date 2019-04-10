@@ -1,5 +1,6 @@
 function arduinoTurnPinOn(app,arduinoNumber,pinNumber)
-% Turn the specified pin on on the arduino
+% arduinoTurnPinOn
+% Turns the specified pin on on the arduino
 % Parameters
 % ----------
 % app : obj
