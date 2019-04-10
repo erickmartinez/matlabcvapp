@@ -11,12 +11,12 @@ function arduinoTurnFanOff(app,MUNumber)
 
 
     % Get the handle to the corresponding arduino:
-    arduino_handle=app.HW(MUNumber).Arduino;
+    a = app.HW(MUNumber).Arduino;
     try
-        WriteDigitalPin(arduino_handle,'A1',0);
+        WriteDigitalPin(a,'A1',0);
     catch
         warndlg(sprintf('Error turning the fan off for arduino %d',...
             MUNumber),'Arduino error');
     end
-    clear arduino_handle;
+    clear a;
 end

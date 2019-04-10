@@ -1,12 +1,21 @@
-function arduinoConnectKeithley(app,arduino_number)
-% Connects the arduino on the specified arduino
+function arduinoConnectKeithley(app,arduinoNumber)
+% arduinoConnectKeithley
+% Connects the Keithley on the specified arduino
+% Parameters
+% ----------
+% app : obj
+%   A handle to the app designer GUI instance
+% arduinoNumber : int
+%   The number of arduino to connect the keithley to
+    
     % Get the handle to the corresponding arduino:
-    arduino_handle=app.HW(arduino_number).Arduino;
+    a = app.HW(arduinoNumber).Arduino;
     try
-        WriteDigitalPin(arduino_handle,'A0',1); % Normally closed position, Keithley connected
-        configurePin(arduino_handle,'A0','unset'); % The pin is no longer reserved and can be automatically set at the next operation.
+        WriteDigitalPin(a,'A0',1); % Normally closed position, Keithley connected
+        configurePin(a,'A0','unset'); % The pin is no longer reserved and can be automatically set at the next operation.
     catch
         warndlg(sprintf('Error connecting Keithley on arduino %d',...
-            arduino_number),'Arduino error');
+            arduinoNumber),'Arduino error');
     end
+    clear a;
 end

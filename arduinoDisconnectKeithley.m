@@ -1,11 +1,20 @@
 function arduinoDisconnectKeithley(app,arduino_number)
-% Connects the arduino on the specified arduino
+% arduinoDisconnectKeithley
+% Disconnects the Keithley on the specified arduino
+% Parameters
+% ----------
+% app : obj
+%   A handle to the app designer GUI instance
+% arduinoNumber : int
+%   The number of arduino to disconnect the keithley from
+
     % Get the handle to the corresponding arduino:
-    arduino_handle=app.HW(arduino_number).Arduino;
+    a=app.HW(arduino_number).Arduino;
     try
-        WriteDigitalPin(arduino_handle,'A0',0); % Normally closed position, Keithley connected
+        WriteDigitalPin(a,'A0',0); % Normally closed position, Keithley connected
     catch
         warndlg(sprintf('Error disconnecting Keithley on arduino %d',...
             arduino_number),'Arduino error');
     end
+    clear a;
 end
