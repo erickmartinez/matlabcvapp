@@ -8,8 +8,8 @@ function MD=fcncallback_ext(app,MUnb,MD,CVProgram)
 % Find parameters
 % Need to store a variable that will indicate that all the measurements
 % are completed, so that we can break the endless time loop
-Arduino=app.HW(MUbn).Arduino;
-stressBiasTime_sec=MD(mu).ExpData.Setup.biastime_sec; % dtime is the stress bias time converted in seconds (in startproc)
+Arduino=app.HW(MUnb).Arduino;
+stressBiasTime_sec=MD(MUnb).ExpData.Setup.biastime_sec; % dtime is the stress bias time converted in seconds (in startproc)
 ArdPins=MD(MUbn).ArdP; % Arduino pin numbers corresponding to the POGO pins
 CoolT=MD(MUnb).ExpData.Setup.TempC;
 StressT=MD(MUnb).ExpData.Setup.TempH;

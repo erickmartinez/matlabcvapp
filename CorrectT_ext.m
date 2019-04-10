@@ -1,5 +1,5 @@
 %Convert Function from Desired Temperature Thermocouple to Hotplate Set Temperature Based on Calibration Fit
-function Tnew = CorrectT_ext(app,T,MUnb)
+function Tnew = CorrectT_ext(T,MUnb)
 
 switch MUnb
     % Calibration for hotplate number 1
