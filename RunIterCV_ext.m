@@ -90,5 +90,5 @@ end
 %%% Is the following line ever executed?
 MD=FlatbandFitting(app, MD, MUnb); %Fit flatband for pin
 % End of function
+
 clear Arduino
-end

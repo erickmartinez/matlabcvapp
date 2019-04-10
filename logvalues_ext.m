@@ -1,10 +1,10 @@
 function MD=logvalues_ext(app, MD, MUnb)
 % Function to log temperature, time and current
-stressBiasTime=app.biastime;
-% app.biastime is the bias time in seconds calculated in the beginning of startproc from app.dt_gnl, the
+stressBiasTime=MD(MUnb).ExpData.Setup.biastime_sec; % app.biastime is the bias time in seconds calculated in the beginning of startproc from app.dt_gnl, the
 % user-defined time step, and from app.t_inc_unit_gnl, the time unit.
-stressbiasstep=ceil(stressBiasTime/app.Itpoints); % Length of time step between points for logging during stress
+stressbiasstep=ceil(stressBiasTime/app.Itpoints.Value); % Length of time step between points for logging during stress
 % app.Itpoints is the number of points T and I point to be taken during stress, defined by the user
+disp('stressbiasstep');disp(stressbiasstep);
 
 % Find parameters
 Ttimestep=app.T_log_ramp_step; % Timestep for temperature logging during ramping

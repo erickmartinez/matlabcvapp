@@ -68,24 +68,26 @@ Ard_COM_table=[8,7,6];
     waitbar(7/8,wb,message3);
     % Define visa connection to K2401
 %     k = 0;
+    delete(instrfind('agilent', 'GPIB0::25::INSTR'));
     try 
-        k = visa('agilent', 'GPIB0::25::INSTR'); 
+        k = gpib('KEYSIGHT',7,25);
         %Set data buffer size (important to read out all current data)
         set(k, 'InputBufferSize', 64*1024); 
         %Open visa object
         fopen(k);
         set(k,'Timeout',10); %Set timeout
 
-        fprintf(k, '*RST') %Reset K2401
-        fprintf(k, ":OUTP:SMOD HIMP") % Sets High Impedance Mode
-        fprintf(k, ':ROUT:TERM REAR') %Set I/O to Rear Connectors
-        fprintf(k, ':SENS:FUNC:CONC OFF') %Turn Off Concurrent Functions
-        fprintf(k, ':SOUR:FUNC VOLT') %Voltage Source Function
-        fprintf(k, ":SENSE:FUNC 'CURR:DC'") %DC Current Sense Function
-        fprintf(k, ":SENSE:CURR:PROT .105") %Set Compliance Current to 105 mA
-        fprintf(k, ':SOUR:VOLT:MODE FIX') %Set Voltage Source Sweep Mode
-        fprintf(k, ":SOUR:DEL .1") %100ms Source Delay
-        fprintf(k, ":FORM:ELEM CURR") %Select Data Collecting Item Current (FORMAT CURRENT, see short-form rule p.338 Keithley 2400.). Remove to also read voltage?
+        fprintf(k, '*RST'); %Reset K2401
+        fprintf(k, ":OUTP:SMOD HIMP"); % Sets High Impedance Mode
+        fprintf(k, ':ROUT:TERM REAR'); %Set I/O to Rear Connectors
+        fprintf(k, ':SENS:FUNC:CONC OFF'); %Turn Off Concurrent Functions
+        fprintf(k, ':SOUR:FUNC VOLT'); %Voltage Source Function
+        fprintf(k, ":SENSE:FUNC 'CURR:DC'"); %DC Current Sense Function
+        fprintf(k, ":SENSE:CURR:PROT .105"); %Set Compliance Current to 105 mA
+        fprintf(k, ':SOUR:VOLT:MODE FIX'); %Set Voltage Source Sweep Mode
+        fprintf(k, ":SOUR:DEL .1"); %100ms Source Delay
+        fprintf(k, ":FORM:ELEM CURR"); %Select Data Collecting Item Current (FORMAT CURRENT, see short-form rule p.338 Keithley 2400.). Remove to also read voltage?
+        fprintf(k, ":OUTP ON"); %Turn On Source Output to allow initial current measurement (should be 0 as all pins are disconnected)
         app.StatusLampKeithley.Color = [0 1 0];
     catch e
         success = 0;
@@ -95,10 +97,11 @@ Ard_COM_table=[8,7,6];
     % Print waitbar
     message4=['Initializing Instruments:Impedance Analyzer ... Please Wait'];
     waitbar(1,wb,message4);
+    delete(instrfind('Name','GPIB0::17::INSTR'));
 %     v = 0;
     try
         %Define visa object to Impedance Analyzer
-        v = visa('agilent', 'GPIB0::17::INSTR');
+        v = gpib('KEYSIGHT',7,17);
         %Set data buffer size (important to read out all CV data)
         set(v, 'InputBufferSize', 64*1024); 
         set(v,'Timeout',120); %Set visa timeout
@@ -123,7 +126,7 @@ Ard_COM_table=[8,7,6];
         % Turn the connected flag on
         app.devicesConnected = 1;
     else
-        HW = 0;
+        app.HW=[]; % Remove the hardware field
         CV_DisconnectDevices(app);
         app.PowerSwitch.Value = 'Off';
     end
