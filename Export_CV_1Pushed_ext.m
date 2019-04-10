@@ -1,11 +1,23 @@
 function Export_CV_1Pushed_ext(app)
+% Export_CV_1Pushed_ext
+% Exports all the CV plots
+% Parameters
+% ----------
+% app : obj
+%   A handle to the app designer gui object
+
+% Clear all figures
 clf; shg;
+% Iterate over all the measurement units
+for mu=1:3
+end
 try
     PinState = [app.P1_1.Value, app.P2_1.Value, app.P3_1.Value, app.P4_1.Value];
     CVPlots = [app.CV1_1,app.CV2_1,app.CV3_1,app.CV4_1];
     ValidCVPlots = CVPlots(PinState==1);
     for e1 = 1:length(CVPlots)
         if (PinState(e1))
+            MD=PlotCV(app,MD(MUnb).ExpData.Pin(p).C,MD(MUnb).ExpData.Pin(p).V,MD(MUnb).Plots.CV(p),MUnb); %Plot CV curve and temperature
             subplot(2,2,e1)
             hold on
             set(gca, 'ColorOrder', jet(app.Iter_tot_1.Value+1),'FontSize',14)
