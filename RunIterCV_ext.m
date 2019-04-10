@@ -1,10 +1,10 @@
 function MD = RunIterCV_ext(app,CVprogram,LampSet,LampColor,MUnb,MD) % Run Iterative CV Measurement
 % Find parameters
-Arduino=app.HW(MUbn).Arduino;
-ArdPins=MD(MUbn).ArdP; % Arduino pin numbers corresponding to the POGO pins
-setCoolT=MD(HPnb).ExpData.Setup.TempC;
-setStressT=MD(HPnb).ExpData.Setup.TempH;
-PinState=MD(HPnb).PinState;
+Arduino=app.HW(MUnb).Arduino;
+ArdPins=MD(MUnb).ArdP; % Arduino pin numbers corresponding to the POGO pins
+setCoolT=MD(MUnb).ExpData.Setup.TempC;
+setStressT=MD(MUnb).ExpData.Setup.TempH;
+PinState=MD(MUnb).PinState;
 Err=MD(MUnb).MDdata.Err;
 meas_flag=MD(MUnb).MDdata.meas_flag;
 PreBias=MD(MUnb).ExpData.Setup.PreBiasValue;

@@ -63,7 +63,7 @@ Ard_COM_table=[8,7,6];
         end
     end
     instrreset;
-    app.HW = 0;
+    app.HW=[]; % Remove the hardware field
     for i=1:3
         turnHPLampOnOff(app,i,0);
         turnArduinoLampOnOff(app,i,0);

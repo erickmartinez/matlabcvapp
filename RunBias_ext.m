@@ -1,8 +1,9 @@
 % function [I t TempTC temp_t] = RunBias_ext(app, Vstress,tIstress,tstep,th,Ih,PinState,ArdP,LampSet,LampColor,IsPreBias,PreBiasPin)
 function MD = RunBias_ext(app, MD, MUnb, IsPreBias, PreBiasPin)
-ArdPins=MD(MUbn).ArdP;
-PinState=MD(HPnb).PinState;
-setStressT=MD(HPnb).ExpData.Setup.TempH;
+ArdPins=MD(MUnb).ArdP;
+PinState=MD(MUnb).PinState;
+setStressT=MD(MUnb).ExpData.Setup.TempH;
+Err=MD(MUnb).MDdata.Err;
 
 if(IsPreBias) % IF PREBIAS STEP
     for p = 1:length(PinState) %Parse through all  pins
@@ -19,7 +20,7 @@ if(IsPreBias) % IF PREBIAS STEP
     writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(PreBiasPin))),0); % turn off prebias pin 
     
 else % IF REGULAR STRESS STEP
-    if(getTC(app,MUnb)<=setStressT+Err && getTc(app,MUnb)>=setStressT-Err && meas_flag==1) % If the measurement temperature is reached and the measurement flag is 1 (measurement already performed)
+    if(getTC(app,MUnb)<=setStressT+Err && getTC(app,MUnb)>=setStressT-Err && meas_flag==1) % If the measurement temperature is reached and the measurement flag is 1 (measurement already performed)
         writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Normally closed position, Keithley connected
         % Turn on all pins if they have been activated by the user
         for p = 1:length(PinState) % Parse through all  pins
