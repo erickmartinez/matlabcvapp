@@ -65,4 +65,6 @@ MD=logvalues_ext(app, MD, MUnb);
 %% Save data
 saveMDdata(app, MD, MUnb);
 
+clear Arduino
+
 % End function
