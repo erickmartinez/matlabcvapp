@@ -18,6 +18,15 @@ function CV_ToggleAllPinsHP3(app,value)
         app.P6Lamp_3.Color = colorOn;
         app.P7Lamp_3.Color = colorOn;
         app.P8Lamp_3.Color = colorOn;
+        
+        app.P1_3.Value = 1;
+        app.P2_3.Value = 1;
+        app.P3_3.Value = 1;
+        app.P4_3.Value = 1;
+        app.P5_3.Value = 1;
+        app.P6_3.Value = 1;
+        app.P7_3.Value = 1;
+        app.P8_3.Value = 1;
     else
         app.P1_3.Text = "OFF";
         app.P2_3.Text = "OFF";
@@ -35,5 +44,14 @@ function CV_ToggleAllPinsHP3(app,value)
         app.P6Lamp_3.Color = colorOff;
         app.P7Lamp_3.Color = colorOff;
         app.P8Lamp_3.Color = colorOff;
+        
+        app.P1_3.Value = 0;
+        app.P2_3.Value = 0;
+        app.P3_3.Value = 0;
+        app.P4_3.Value = 0;
+        app.P5_3.Value = 0;
+        app.P6_3.Value = 0;
+        app.P7_3.Value = 0;
+        app.P8_3.Value = 0;
     end
 end

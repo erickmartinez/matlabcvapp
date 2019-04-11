@@ -5,7 +5,7 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,temperature)
 %   temperature: the temperature in °C
     % Get the handle to the hotplate
     TargetTempH=MD(hotplateNumber).ExpData.Setup.TempH;
-    TargetTempH=MD(hotplateNumber).ExpData.Setup.TempC;
+    TargetTempC=MD(hotplateNumber).ExpData.Setup.TempC;
     hotplate_handle = app.HW(hotplateNumber).HP;
     HT = floor(temperature/25.6); %Set high temp value 
     LT = mod(temperature,25.6)*10; %Set low temp value 

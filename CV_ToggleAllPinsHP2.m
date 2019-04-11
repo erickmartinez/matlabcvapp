@@ -18,6 +18,15 @@ function CV_ToggleAllPinsHP2(app,value)
         app.P6Lamp_2.Color = colorOn;
         app.P7Lamp_2.Color = colorOn;
         app.P8Lamp_2.Color = colorOn;
+        
+        app.P1_2.Value = 1;
+        app.P2_2.Value = 1;
+        app.P3_2.Value = 1;
+        app.P4_2.Value = 1;
+        app.P5_2.Value = 1;
+        app.P6_2.Value = 1;
+        app.P7_2.Value = 1;
+        app.P8_2.Value = 1;
     else
         app.P1_2.Text = "OFF";
         app.P2_2.Text = "OFF";
@@ -35,5 +44,14 @@ function CV_ToggleAllPinsHP2(app,value)
         app.P6Lamp_2.Color = colorOff;
         app.P7Lamp_2.Color = colorOff;
         app.P8Lamp_2.Color = colorOff;
+        
+        app.P1_2.Value = 0;
+        app.P2_2.Value = 0;
+        app.P3_2.Value = 0;
+        app.P4_2.Value = 0;
+        app.P5_2.Value = 0;
+        app.P6_2.Value = 0;
+        app.P7_2.Value = 0;
+        app.P8_2.Value = 0;
     end
 end
