@@ -74,11 +74,11 @@ function ExportVFBtime_1Pushed_ext(app)
         wd = app.FileLoc.Value;
         tstamp = TimeStamp;
         filetag = "Figure_MU"+k+"_VFBTime" + tstamp;
-%         try
-%             savefig(figureVFBtime,fullfile(wd,strcat(filetag,'.fig')));
-%             print(figureVFBtime,fullfile(wd,strcat(filetag,'.jpg')),'-djpeg','-r300');
-%         catch e
-%             display(e.message);
-%         end % try catch ends
+        try
+            savefig(figureVFBtime,fullfile(wd,strcat(filetag,'.fig')));
+            print(figureVFBtime,fullfile(wd,strcat(filetag,'.jpg')),'-djpeg','-r300');
+        catch e
+            display(e.message);
+        end % try catch ends
     end % k=1:3 ends 
 end
