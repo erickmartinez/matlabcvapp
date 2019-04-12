@@ -35,7 +35,7 @@ function CV_RebootSystem(app)
         arduinoTurnFanOff(app,mu);
         % Turn the hot plate off
         success = setHotPlateTemperature(app,mu,25.6);
+        clear a;
     end
-    clear a;
     CV_DisconnectDevices(app);
 end
