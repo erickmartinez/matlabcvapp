@@ -1,0 +1,58 @@
+% testCV_HP3
+% Script used to take CV measurement on hotplate 3 to test the capacitors
+
+instrreset
+com='COM6';
+ArdP=linspace(2,8,7); % Contains the Arduino pin numbers corresponding to each POGO pin
+delete(instrfind({'Port'},{com}))
+[Arduino, ~] = InitArd_GG(com);
+
+% Open GPIB connection to impedance analyzer
+IMPA = gpib('KEYSIGHT',7,17); %Define visa object to Impedance Analyzer
+set(IMPA, 'InputBufferSize', 64*1024); %Set data buffer size (important to read out all CV data)
+set(IMPA,'Timeout',120); %Set visa timeout
+fopen(IMPA); %Open visa
+
+%Define CV program to be read in by Impedance Analyzer
+Prog_CV = "PROG"...
+    + "'10 FNC1'," ... %Impedance Measurement
+    + "'20 SWM2'," ... % Single Mode Sweep
+    + "'30 IMP5'," ... % Cs-Rs Circuit
+    + "'40 SWP2'," ... % DC Bias Sweep
+    + "'50 SWD2'," ... % Sweep Direction
+    + "'60 5 ms'," ... % Integration Time
+    + "'70 NOA=1'," ... % # of Averages
+    + "'80 OSC=0.1;FREQ=1e"'," ... % AC Amplitude (V) & Frequency
+    + "'90 START=-7;STOP=+7'," ... %Starting Negative & Positive Volgates
+    + "'100 STEP=0.1'," ... %DC Sweep Step Magnitude (V)
+    + "'110 DTIME=0'," ... % Measurement Delay Time Set to 0 (No Delay)
+    + "'120 SHT1'," ... % Short Calibration Set to On
+    + "'130 OPN1'," ... % Open Calibration Set to On
+    + "'140 AUTO'," ... % Auto-Scale A & B
+    + "'150 CPYM2'," ... % Copy Data Mode 2
+    + "'160 SWTRG'," ... % Single Trigger Run
+    + "'170 COPY'," ... % Copy Data to Instrument
+    + "'180 DCOFF'," ... % Doesn't work, but attempt to turn off DC bias
+    + "'190 END'";
+
+% Close switch to impedance analyzer connection (the analyzer is in
+% normally open position, which becomes closed when setting the Arduino pin
+% to low voltage)
+writeDigitalPin(Arduino,'A0',0);
+
+% Measure CV for each pin
+figure(1)
+for p=1:length(ArdP)
+    writeDigitalPin(Arduino,char("D"+num2str(ArdP(p))),1); %Turn on desired pogo-pin
+    [Cmeas, Rmeas, Vmeas] = RunProgCV_interface(IMPA, CVprogram); %Run CV measurement
+    figure(1)
+    plot(Vmeas,Cmeas)
+    hold on
+end
+hold off
+legend('Pin 1','Pin 2','Pin 3','Pin 4','Pin 5','Pin 6','Pin 7','Pin 8');
+
+% Plot CV
+
+fclose(IMPA);
+instrreset
