@@ -16,7 +16,7 @@ function CV_RebootSystem(app,MD)
     measurementUnits = [1,2,3];
     for mu=1:length(measurementUnits)
         % The handle to the arduino
-        arduino_handle=app.HW(mu).Arduino;
+        a = app.HW(mu).Arduino;
         % Disconnect all POGO pins
         pogoPins   = MD(mu).ArdP; % Arduino pin numbers corresponding to the POGO pins (can be any numbers and does not necessarily start at 1)
         for pPIN = 1:length(pogoPins)
@@ -26,6 +26,8 @@ function CV_RebootSystem(app,MD)
         % normal position
         try
             WriteDigitalPin(arduino_handle,'A0',1); % Normally closed position, Keithley connected
+            WriteDigitalPin(a,'A0',1); % Normally closed position, Keithley connected
+            configurePin(a,'A0','unset'); % The pin is no longer reserved and can be automatically set at the next operation.
         catch
             warndlg(sprintf('Error disconnecting Keithley on arduino %d',...
                 mu),'Arduino error');
@@ -36,5 +38,6 @@ function CV_RebootSystem(app,MD)
         success = setHotPlateTemperature(app,MD,mu,25.6);
     end
     clear Arduino_handle
+    clear a;
     CV_DisconnectDevices(app);
 end
