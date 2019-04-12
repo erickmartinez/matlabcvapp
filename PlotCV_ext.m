@@ -25,7 +25,7 @@ function MD=PlotCV_ext(app,C,V,plotAxis,MD,MUnb)
 %   A data structure with the 
 
 % Bias and temperature value to write axis legends
-bias_value=MD(MUnb).ExpData.Setup.StressBiasValue;
+bias_value=MD(MUnb).ExpData.Setup.stressBiasValue;
 temp_value=MD(MUnb).ExpData.Setup.TempH;
 
 plot(plotAxis,V,C.*1e12,'LineWidth',2); %Plots regular C vs. V
@@ -33,5 +33,5 @@ plotAxis.Title.String = "Capacitance Vs. Voltage (Bias = "+bias_value+"V, T = "+
 plotAxis.YLabel.String = 'Capacitance (pF)';
 
 % Log values
-MD=logvalues_ext(app, MD);
+MD=logvalues_ext(app, MD, MUnb);
 end

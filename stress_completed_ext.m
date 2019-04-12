@@ -8,6 +8,8 @@ biastime_sec=MD(MUnb).ExpData.Setup.biastime_sec;
 StressT=MD(MUnb).ExpData.Setup.TempH;
 CoolT=MD(MUnb).ExpData.Setup.TempC;
 Err=MD(MUnb).MDdata.Err;
+PinState=MD(MUnb).PinState;
+ArdPins=MD(MUnb).ArdP;
 
 time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recorded bias starting time for this measurement unit
 if(time_inc>=biastime_sec && getTC(app,MUnb)<=StressT+3 && getTC(app,MUnb)>= StressT-3) % Allow error of +/- 3 °C in temperature. Temperature condition to avoid turning on the fan if ramping has already started or if room T has been reached
@@ -17,8 +19,8 @@ if(time_inc>=biastime_sec && getTC(app,MUnb)<=StressT+3 && getTC(app,MUnb)>= Str
     end
     MD(MUnb).MDdata.stress_completed_flag=1; % Set stress completed flag to 1
     % Stop hotplate
-    setHotPlateTemperature(app, MD, app.HW(MUnb).HP, MD(MUnb).ExpData.Setup.CalTempC); % Set hotplate temperature to the cool temperature, corrected using the calibration curve
-    setHotPlateTemperature(app, MD, app.HW(MUnb).HP, MD(MUnb).ExpData.Setup.CalTempC);
+    setHotPlateTemperature(app, MD, MUnb, MD(MUnb).ExpData.Setup.CalTempC); % Set hotplate temperature to the cool temperature, corrected using the calibration curve
+    setHotPlateTemperature(app, MD, MUnb, MD(MUnb).ExpData.Setup.CalTempC);
     % stop bias (8 POGO pins)
     for p = 1:length(PinState) %Parse through all  pins
         writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0); %Set all available pins to 0 or off

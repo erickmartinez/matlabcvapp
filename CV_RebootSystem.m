@@ -1,4 +1,4 @@
-function CV_RebootSystem(app)
+function CV_RebootSystem(app,MD)
 % CV_RebootSystem
 % Disconnects all the POGO pins, disconnects the impedance analyzer, turns
 % off all the hot plates and fans.
@@ -25,15 +25,16 @@ function CV_RebootSystem(app)
         % Return all Keithley/Impedance analyzer relay switches to the
         % normal position
         try
-            WriteDigitalPin(arduino_handle,'A0',0); % Normally closed position, Keithley connected
+            WriteDigitalPin(arduino_handle,'A0',1); % Normally closed position, Keithley connected
         catch
             warndlg(sprintf('Error disconnecting Keithley on arduino %d',...
-                arduino_number),'Arduino error');
+                mu),'Arduino error');
         end
         % Turn the fan off
         arduinoTurnFanOff(app,mu);
         % Turn the hot plate off
-        success = setHotPlateTemperature(app,mu,25.6);
+        success = setHotPlateTemperature(app,MD,mu,25.6);
     end
+    clear Arduino_handle
     CV_DisconnectDevices(app);
 end

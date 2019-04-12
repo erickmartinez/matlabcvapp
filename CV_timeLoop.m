@@ -39,7 +39,7 @@ function CV_timeLoop(app,MD,CVProgram)
     % When finished, disconnect all POGO pins, disconnect Impedance
     % Analyzer, turn off all the hotplates, turn off the fans, and delete
     % visa objects
-    CV_RebootSystem(app);
+    CV_RebootSystem(app,MD);
     app.stopFlag = 0;
     app.idleFlag = 1;
 end

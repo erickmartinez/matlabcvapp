@@ -46,8 +46,8 @@ IterM = MD(MUnb).ExpData.Setup.IterM ; %Amount of repeated measurements per stre
                         % TO DO: Modify RunBias function
                         MD = RunBias_ext(app, MD, MUnb, 1, p); %Run prebias on pin
                     end
-                    WriteDigitalPin(app.HW(MUnb).Arduino,'A0',0); % Connect impedance analyzer and disconnect Keithley
-                    writeDigitalPin(app.Arduino,char("D"+num2str(ArdPins(p))),1); %Turn on desired pogo-pin
+%                     writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Connect impedance analyzer and disconnect Keithley
+                    writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); %Turn on desired pogo-pin
                     % LampSet(p) = LampColor(p); %Turn on pin lamp
                     [Cmeas, Rmeas, Vmeas] = RunProgCV(app, CVprogram); %Run CV measurement
                     MD(MUnb).MDdata.CVStartTime=[MD(MUnb).MDdata.CVStartTime, toc];
@@ -56,7 +56,7 @@ IterM = MD(MUnb).ExpData.Setup.IterM ; %Amount of repeated measurements per stre
                     MD(MUnb).ExpData.Pin(p).R = [MD(MUnb).ExpData.Pin(p).R Rmeas]; %Save resistance data in pin struct
                     MD(MUnb).ExpData.Pin(p).V = [MD(MUnb).ExpData.Pin(p).V Vmeas]; %Save voltage data in pin struct (% Check in this line that Vmeas format is right)
                     % TO DO: make sure the curves are plotted in the correct CV window. CVPlots are defined at the beginning of StartProc. app.CV1_3, app.CV2_3, app.CV3_3, app.CV4_3, app.CV5_3 for MU3.
-                    MD=PlotCV(app,MD(MUnb).ExpData.Pin(p).C,MD(MUnb).ExpData.Pin(p).V,MD(MUnb).Plots.CV(p),MUnb); %Plot CV curve and temperature
+                    MD=PlotCV_ext(app,MD(MUnb).ExpData.Pin(p).C, MD(MUnb).ExpData.Pin(p).V, MD(MUnb).Plots.CV(p), MD, MUnb); %Plot CV curve and temperature
                 end
                 
                 disp('RunIterCV hotplate number');disp(MUnb);
@@ -91,7 +91,6 @@ IterM = MD(MUnb).ExpData.Setup.IterM ; %Amount of repeated measurements per stre
         end
     end
 % end
-%%% Is the following line ever executed?
 MD=FlatbandFitting_ext(app, MD, MUnb); %Fit flatband for pin
 % End of function
 

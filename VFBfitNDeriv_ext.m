@@ -3,6 +3,8 @@ function MD=VFBfitNDeriv_ext(app, p, m, MD, MUnb)
 % The function calculates Vfb based on the CV measurement data
 % (recalculates all previous values too)
 
+stressbiastime=MD(MUnb).ExpData.Setup.biastime_sec;
+
 PlotCVby2_p = MD(MUnb).Plots.CVby2(p); % PlotCVby2_p is the handle to the derivative plot corresponding to pin p
 IterM = MD(MUnb).ExpData.Setup.IterM; % Number of repeats for each measurement
 
@@ -10,9 +12,9 @@ Cs = MD(MUnb).ExpData.Pin(p).C; % C in struct for pin p
 Vs = MD(MUnb).ExpData.Pin(p).V; % V in struct for pin p
 Vi=Vs(1):0.001:Vs(end); %Interpolated Voltage Bias Range
 
-t_off = tInSec(app, string(MD(n).ExpData.Setup.t_offset_unit), MD(n).ExpData.Setup.t_offset_value); % Define time-Offset in seconds
-MD(MUnb).ExpData.Pinp(p).tfb = 0:MD(MUnb).ExpData.Setup.dtime:((m-1)*MD(Munb).ExpData.Setup.dtime ); % Set flatband time array (dtime is the stressbiastime in second, to define in startproc
-MD(MUnb).ExpData.Pinp(p).tfb = MD(MUnb).ExpData.Pinp(p).tfb + t_off; % Add time-offset
+t_off = tInSec(app, string(MD(MUnb).ExpData.Setup.t_offset_unit), MD(MUnb).ExpData.Setup.t_offset_value); % Define time-Offset in seconds
+MD(MUnb).ExpData.Pin(p).tfb = 0:stressbiastime:((m-1)*stressbiastime); % Set flatband time array (dtime is the stressbiastime in second, to define in startproc
+MD(MUnb).ExpData.Pin(p).tfb = MD(MUnb).ExpData.Pin(p).tfb + t_off; % Add time-offset
 
 set(PlotCVby2_p, 'ColorOrder', jet((app.Iter_tot_gnl.Value+1)))
 

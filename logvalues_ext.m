@@ -50,7 +50,7 @@ if(meas_flag==0 && toc-MD(MUnb).ExpData.log.Itime(end) < stressBiasTime) % If st
         MD(MUnb).ExpData.log.I = [MD(1).ExpData.log.I, str2double(strsplit(query(app.HW(1).KEITH, ":READ?"),','))']; % Record current value from Keithley (always in MU 1 for all MUs, because same value for all MUs). HW(1).KEITH is the visa object.
         MD(MUnb).ExpData.log.Itime = [MD(1).ExpData.log.Itime, I_time]; % Record time (current is measured for all MUs and thus identical for each of them, but still record in each MU structure array)
         % Plot
-        plot(Itpanel,tcurr/3600,I,'ko-','LineWidth',2);
+        plot(Itpanel,ExpData.log.Itime/3600,MD(MUnb).ExpData.log.I,'ko-','LineWidth',2);
         
         % Log Keithley bias based on the state of the relays? (At the same time as
         % the current)

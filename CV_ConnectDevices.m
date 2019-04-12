@@ -87,7 +87,7 @@ Ard_COM_table=[8,7,6];
         fprintf(k, ':SOUR:VOLT:MODE FIX'); %Set Voltage Source Sweep Mode
         fprintf(k, ":SOUR:DEL .1"); %100ms Source Delay
         fprintf(k, ":FORM:ELEM CURR"); %Select Data Collecting Item Current (FORMAT CURRENT, see short-form rule p.338 Keithley 2400.). Remove to also read voltage?
-        fprintf(k, ":OUTP ON"); %Turn On Source Output to allow initial current measurement (should be 0 as all pins are disconnected)
+        fprintf(k, ":SOUR:VOLT "+0); %Set bias voltage initially to 0
         app.StatusLampKeithley.Color = [0 1 0];
     catch e
         success = 0;

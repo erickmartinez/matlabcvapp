@@ -1,30 +1,30 @@
 function MD=FlatbandFitting_ext(app, MD, MUnb)
-VfbTimePlotColors = ["bo-","yo-","go-","mo-","b+-","y+-","g+-","m+-"]; % To change
+VfbTimePlotColors = ["bo-","yo-","go-","mo-"]; % To change
 IterM = MD(MUnb).ExpData.Setup.IterM; %Set # of measurements per interation
 PinState=MD(MUnb).PinState;
 DerPeaks=MD(MUnb).ExpData.Setup.DerPeaks;
-stressbiastime=MD(MUnb).ExpData.Setup.biastime_sec;
+stressbiastime=MD(MUnb).ExpData.Setup.stressBiasTime;
 
 for p=1:length(PinState) %For all pins
     if(PinState(p)) %If the pin is available
         if (DerPeaks) %If fitting type set to derivative peaks (which is the default)
             m = size(MD(MUnb).ExpData.Pin(p).C,2)/IterM; % Set # of total iterations so far (Flatbandfitting is called once all the iterations of a given cycle have been performed)
-            MD = VFBfitNDeriv_ext(app, p, m, MD, MUnb); % Fit for flatband (data automatically updated within function)
+            MD = VFBfitNDeriv(app, p, m, MD, MUnb); % Fit for flatband (data automatically updated within function)
         else %If fitting type is linear 1/C^2 (NOT USED)    
             errormessage=[newline 'NOTICE: Capacitance fitting method for flatband extraction not implemented. '...
-                'Make sure the "Derivative Peaks" button is pressed on each hotplate input panel.'];
+                'Make sure the "Derivative Peaks" button is pressed on each hotplate ipanel.'];
             error(errormessage);
             
             %%%%% This part not valid (should only use the derivative
             %%%%% method)
-%             [Cfit, Vfit,Vfbtemp] = VFBfitN(app, C,Vall,IterM,PlotCVby2(p)); %Fit for flatband
-%             app.P(p).Vfb = mean(Vfbtemp'); %Update flatband data
-%             app.P(p).VfbStd = std(Vfbtemp');
-%             
-%             m = size(app.P(p).C,2)/IterM; % Set # of total interations so far
-%             t_off = tInSec(app, string(app.t_offset_unit_1.Value), app.TimeOffset_1.Value); % Define time-Offset in seconds
-%             app.P(p).tfb = 0:app.dtime:((m-1)*app.dtime); % Set flatband time array
-%             app.P(p).tfb = app.P(p).tfb+t_off; % Add time-offset
+            [Cfit, Vfit,Vfbtemp] = VFBfitN(app, C,Vall,IterM,PlotCVby2(p)); %Fit for flatband
+            app.P(p).Vfb = mean(Vfbtemp'); %Update flatband data
+            app.P(p).VfbStd = std(Vfbtemp');
+            
+            m = size(app.P(p).C,2)/IterM; % Set # of total interations so far
+            t_off = tInSec(app, string(app.t_offset_unit_1.Value), app.TimeOffset_1.Value); % Define time-Offset in seconds
+            app.P(p).tfb = 0:app.dtime:((m-1)*app.dtime); % Set flatband time array
+            app.P(p).tfb = app.P(p).tfb+t_off; % Add time-offset
             %%%%%
         end
         

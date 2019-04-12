@@ -53,8 +53,8 @@ if(getTC(app,MUnb)<=CoolT+Err && getTC(app,MUnb)>=CoolT-Err && meas_flag==0 && s
         
         writeDigitalPin(Arduino,'A0',1) % Turn off the toggle switch board (NEEDS TO BE AT HIGH POTENTIAL TO BE ON), ie connect to the Keithley
         % Start ramping temperature of the hotplate to the stress temperature
-        setHotPlateTemperature(app,MD,app_HP,MD(MUnb).ExpData.Setup.CalTempH) %Turn off desired hotplate
-        setHotPlateTemperature(app,MD,app_HP,MD(MUnb).ExpData.Setup.CalTempH) %Turn on heating & set to stress temperature of desired hotplate
+        setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH) %Turn off desired hotplate
+        setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH) %Turn on heating & set to stress temperature of desired hotplate
         MD(MUnb).MDdata.meas_flag=1; % Set flag to 1 after measurement completed
         MD(MUnb).MDdata.stress_completed_flag=0; % Set stress completed flag to 0 as the new stress cycle has not been completed 
     end
@@ -63,8 +63,8 @@ end
 %% Log values
 MD=logvalues_ext(app, MD, MUnb);
 
-%% Save data
-saveMDdata(app,MUnb);
+%% Save measuremement and log data of current unit and log data of other units
+saveMDdata(app,MD);
 
 clear Arduino
 
