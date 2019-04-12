@@ -13,7 +13,7 @@ function Export_CV_1Pushed_ext(app)
 % for i=1:10 V(:,i) = x; C(:,i) = sin(x+0.1*(i-1)); end
 % pinStates = ones(8);
 % stressTemp = 40;
-% sressBias = 3;
+% stressBias = 3;
 % cvPlots = 1:8;
 % for i=1:3 app.MD(i).PinState = pinStates(i,:); app.MD(i).ExpData.Setup.StressBiasValue = stressBias; app.MD(i).ExpData.Setup.TempH = stressTemp; app.MD(i).Plots.CV=cvPlots; app.MD(i).ExpData.Setup.biastime_sec=600; for j=1:10 app.MD(i).ExpData.Pin(j).V=V; app.MD(i).ExpData.Pin(j).C = C; end; end
 % app.FileLoc.Value = pwd;
@@ -41,8 +41,8 @@ function Export_CV_1Pushed_ext(app)
         set(gca, 'FontSize',14)
         figureCV2        = figure;%('visible','off'); 
         set(gca, 'FontSize',14)
-        
 
+        hold
         % Iterate over all the pin states
         for q = 1:8 % Gets the number of CV plots
             % If the pin is conneted plot the results
@@ -51,7 +51,7 @@ function Export_CV_1Pushed_ext(app)
                 % measurement unit
                 V = app.MD(k).ExpData.Pin(q).V;
                 C = (app.MD(k).ExpData.Pin(q).C).*1e12;
-                
+
                 % Get the number of lines to be plotted
                 nLines = size(V,2);
                 % Get a colormap for the dataset
@@ -129,6 +129,7 @@ function Export_CV_1Pushed_ext(app)
                         'VerticalAlignment','top');
                     info_txt.Color    = 'k';
                     info_txt.FontSize = 8;
+                    box on
                 end
             end % pinStates(q) ends 
         end % q = 1:totalPlots ends
@@ -145,5 +146,5 @@ function Export_CV_1Pushed_ext(app)
         catch e
             display(e.message);
         end % try catch ends
-    end % mu=1:3 ends 
+    end % k=1:3 ends 
 end
