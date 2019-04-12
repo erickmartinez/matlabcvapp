@@ -39,5 +39,8 @@ function CV_RebootSystem(app,MD)
     end
     clear Arduino_handle
     clear a;
+        success = setHotPlateTemperature(app,mu,25.6);
+        clear a;
+end
     CV_DisconnectDevices(app);
 end

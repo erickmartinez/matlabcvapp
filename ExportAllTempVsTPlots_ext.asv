@@ -1,0 +1,35 @@
+function ExportAllTempVsTPlots_ext(app)
+% ExportAllIvTPlots_ext
+% Exports all the Temp vs time plots
+% Parameters
+% ----------
+% app : obj
+%   A handle to the app designer gui object
+%
+
+    % Determine the maximum time to assign units accordingly
+    timeEnd = max([MD(1).ExpData.log.Ttime,MD(2).ExpData.log.Ttime,...
+        MD(3).ExpData.log.Ttime]); 
+    [timeUnit,timeFactor] = adjustTimeUnits(timeEnd);
+    
+    markers = ["o","s","d","^","v",">","<","p","h"];
+    legendLabels = cell(3);
+    figureTempvTBtime        = figure;%('visible','off'); 
+    set(gca, 'FontSize',14)
+    hold on
+    % Iterate over all the measurement units
+    for k=1:3
+        % Determine if we the measurement unit is connected
+        isConnected = any(app.MD(k).PinState);
+        if isConnected == 1
+            % Get the value of the stress bias
+            stressBias      = app.MD(k).ExpData.Setup.StressBiasValue;
+            % Construct the labels for the line
+            legendLabels{k} = sprintf("MU%d, stress T = %.1f °C",...
+                    k,app.MD(k).ExpData.Setup.TempH);
+            tTime = MD(k).ExpData.log.Ttime/timeFa
+            plot(
+        end
+        
+    end % ends for k=1:3
+end

@@ -76,6 +76,8 @@ function Export_CV_1Pushed_ext(app)
                     cbTicks = linspace(0,1,5);
                     cbTicklLabels = linspace(0,max(stressTime),5);
                     hc.Label.String = 'Time (hr)';
+                    % If the tick strings are two long, format with just
+                    % one decimal point
                     TL=arrayfun(@(x) sprintf('%.1f',x),cbTicklLabels,'un',0);
                     if max(stressTime) > 10
                         set(hc, 'YTick',cbTicks, 'YTickLabel',cbTicklLabels);
@@ -86,6 +88,7 @@ function Export_CV_1Pushed_ext(app)
                     title( "Pin "+q);
                     xlabel('Voltage (V)');
                     ylabel('Capacitance (pF)');
+                    % Ad information text
                     info_str = sprintf("Bias = %.1f V\nT = %.1f °C",...
                         stressBias,...
                         stressTemp);
@@ -134,10 +137,14 @@ function Export_CV_1Pushed_ext(app)
             end % pinStates(q) ends 
         end % q = 1:totalPlots ends
 
+        % Get the working directory from the GUI
         wd = app.FileLoc.Value;
+        % Get a timestamp to add to the file tags
         tstamp = TimeStamp;
+        % Construct file tags
         filetag1 = "Figure_MU"+k+"_CV1" + tstamp;
         filetag2 = "Figure_MU"+k+"_CV2" + tstamp;
+        %Save the figures as .fig and .jpeg
         try
             savefig(figureCV1,fullfile(wd,strcat(filetag1,'.fig')));
             savefig(figureCV2,fullfile(wd,strcat(filetag2,'.fig')));
