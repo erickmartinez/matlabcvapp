@@ -5,6 +5,7 @@ function ExportVFBtime_1Pushed_ext(app)
 % ----------
 % app : obj
 %   A handle to the app designer gui object
+%
 % Generate sample data to test:
 % x = linspace(0,3600,20);
 % tfb = zeros(20,10);
@@ -19,7 +20,6 @@ function ExportVFBtime_1Pushed_ext(app)
     markers = ["o","s","d","^","v",">","<","p","h"];
     legendLabels = "Pin " + (1:8);
     % Iterate over all the measurement units
-   
     for k=1:3
         % Get the pin states for the current unit
         pinStates        = app.MD(k).PinState;
@@ -70,10 +70,15 @@ function ExportVFBtime_1Pushed_ext(app)
             'VerticalAlignment','top');
         info_txt.Color  = 'k';
         info_txt.FontSize = 12;
-
+        
+        % Get the working directory from the GUI
         wd = app.FileLoc.Value;
+        % Get the time stamp to add to the filetag
         tstamp = TimeStamp;
+        % Construct the file tag
         filetag = "Figure_MU"+k+"_VFBTime" + tstamp;
+        
+        % Save the plot as .fig and as .jpeg
         try
             savefig(figureVFBtime,fullfile(wd,strcat(filetag,'.fig')));
             print(figureVFBtime,fullfile(wd,strcat(filetag,'.jpg')),'-djpeg','-r300');
