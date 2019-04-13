@@ -6,10 +6,10 @@ function CV_DisconnectDevices(app)
 %   app : Obj
 %       A handle to the app designer GUI
 
-% Tables containing COM port numbers for each hotplate
-HP_COM_table=[9,5,10];
-% Tables containing COM port numbers for each Arduino
-Ard_COM_table=[8,7,6];
+    % Tables containing COM port numbers for each hotplate
+    HP_COM_table=[9,5,10];
+    % Tables containing COM port numbers for each Arduino
+    Ard_COM_table=[8,7,6];
 
     message0 = 'Disconnecting Instruments... Please Wait';
     wb = waitbar(0,message0);

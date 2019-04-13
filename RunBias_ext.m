@@ -21,7 +21,11 @@ if(IsPreBias) % IF PREBIAS STEP
     writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(PreBiasPin))),0); % turn off prebias pin 
     
 else % IF REGULAR STRESS STEP
-    if(getTC(app,MUnb)<=setStressT+Err && getTC(app,MUnb)>=setStressT-Err && meas_flag==1) % If the measurement temperature is reached and the measurement flag is 1 (measurement already performed)
+    Temp=getTC(app,MUnb);
+    if(Temp<=setStressT+Err && Temp>=setStressT-Err && meas_flag==1) % If the measurement temperature is reached and the measurement flag is 1 (measurement already performed)
+        message_bias=['Starting bias in Runbias_ext on MU ',num2str(MUnb)];
+        disp(message_bias);
+        
         writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Normally closed position, Keithley connected
         % Turn fan off if on
         if(MD(MUnb).MDdata_fanflag==1)
@@ -41,7 +45,7 @@ else % IF REGULAR STRESS STEP
         BtLength=length(MD(MUnb).MDdata.startbiastime); % Current length of the table containing bias starting time for each cycle
         MD(MUnb).MDdata.startbiastime(BtLength+1)=toc; % Add the bias starting time for the current cycle
         MD(MUnb).MDdata.meas_flag=0; % Set meas flag to 0 after bias has been started
-        
+        MD(MUnb).MDdata.cycle_counter=MD(MUnb).MDdata.cycle_counter+1; % Increase the loop counter by one
         MD=logvalues_ext(app, MD, MUnb);% log T and I values
     end
 end

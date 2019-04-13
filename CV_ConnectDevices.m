@@ -66,14 +66,13 @@ Ard_COM_table=[8,7,6];
     % Print waitbar
     message3='Initializing Instruments:Keithley ... Please Wait';
     waitbar(7/8,wb,message3);
-    % Define visa connection to K2401
-%     k = 0;
+    % Define GPIB connection to K2401
     delete(instrfind('agilent', 'GPIB0::25::INSTR'));
     try 
         k = gpib('KEYSIGHT',7,25);
-        %Set data buffer size (important to read out all current data)
+        % Set data buffer size (important to read out all current data)
         set(k, 'InputBufferSize', 64*1024); 
-        %Open visa object
+        % Open visa object
         fopen(k);
         set(k,'Timeout',10); %Set timeout
 
@@ -100,7 +99,7 @@ Ard_COM_table=[8,7,6];
     delete(instrfind('Name','GPIB0::17::INSTR'));
 %     v = 0;
     try
-        %Define visa object to Impedance Analyzer
+        %Define gpib object to Impedance Analyzer
         v = gpib('KEYSIGHT',7,17);
         %Set data buffer size (important to read out all CV data)
         set(v, 'InputBufferSize', 64*1024); 
@@ -115,7 +114,7 @@ Ard_COM_table=[8,7,6];
     pause(0.5);
     close(wb)
     
-    % If no errors proceed
+    % If no errors, proceed
     if success == 1
         % Save the keihtley and impedance analyzer objects in the HW
         % structure

@@ -36,7 +36,8 @@ MD=fanoff_ext(app, MD, MUnb);
 % measurement would start before the end of the bias step unless a
 % condition is set on the time elapsed since biasstarttime.
 time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recorded bias starting time for this measurement unit
-if(getTC(app,MUnb)<=CoolT+Err && getTC(app,MUnb)>=CoolT-Err && meas_flag==0 && stress_completed_flag==1) % What if both bias and measurement are performed at room temperature? add a stress completed flag
+Temp=getTC(app,MUnb);
+if(Temp<=CoolT+Err && Temp>=CoolT-Err && meas_flag==0 && stress_completed_flag==1) % What if both bias and measurement are performed at room temperature? add a stress completed flag
     if(time_inc>=stressBiasTime_sec || MD(MUnb).MDdata.startbiastime(end)==0) % For the first measurement, startbiastime is set to 0 for initialization
         % In case the fan is still on, turn it off
         if(MD(MUnb).MDdata_fanflag==1)

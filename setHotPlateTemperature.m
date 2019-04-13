@@ -27,10 +27,10 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,temperature)
             success = 1;
 %             fprintf("Temperature set to %.1f °C on hotplate %d, corresponding to a surface heating temperature of %.1f °C or a surface cooling temperature of %.1f °C",...
 %                 temperature,hotplateNumber,TargetTempH,TargetTempC);
-disp('HP ok');
+disp('HP temperature set');
         end
     catch
         warndlg(sprintf('Error communicating with hotplate %d',hotplateNumber),'Hotplate error');
     end
-end
 
+pause(10); % Let temperature stabilize
