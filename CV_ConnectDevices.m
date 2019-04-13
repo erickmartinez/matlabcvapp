@@ -130,4 +130,3 @@ Ard_COM_table=[8,7,6];
         app.PowerSwitch.Value = 'Off';
     end
 end
-
