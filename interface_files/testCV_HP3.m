@@ -2,9 +2,11 @@
 % Script used to take CV measurement on hotplate 3 to test the capacitors
 
 instrreset
-com='COM6';
+% com='COM6';
+% com='COM7';
+com='COM8';
 % ArdP=linspace(2,9,8); % Contains the Arduino pin numbers corresponding to each POGO pin
-ArdP=[2,3,4,5];
+ArdP=[2,3,4,5,6,7,8,9];
 delete(instrfind({'Port'},{com}))
 Arduino = arduino(char(com),'Uno','Libraries','SPI'); % Initialize Arduino
 
@@ -22,7 +24,7 @@ Prog_CV = "PROG"...
     + "'40 SWP2'," ... % DC Bias Sweep
     + "'50 SWD2'," ... % Sweep Direction
     + "'60 ITM2'," ... % Integration Time
-    + "'70 NOA=8'," ... % # of Averages
+    + "'70 NOA=1'," ... % # of Averages
     + "'80 OSC=0.1;FREQ=1000000'," ... % AC Amplitude (V) & Frequency
     + "'90 START=-12;STOP=4'," ... %Starting Negative & Positive Volgates
     + "'100 STEP=0.05'," ... %DC Sweep Step Magnitude (V)
@@ -51,7 +53,7 @@ for p=1:length(ArdP)
     writeDigitalPin(Arduino,char("D"+num2str(ArdP(p))),1); %Turn on desired pogo-pin
     [Cmeas, Rmeas, Vmeas] = RunProgCV_interface(IMPA, Prog_CV); %Run CV measurement
     %     subplot(1,size(Ardp),p)
-    figure
+    subplot(2,4,p)
     plot(Vmeas,Cmeas*1e12)
     ylabel('Capacitance (pF)');
     xlabel('Voltage (V)');

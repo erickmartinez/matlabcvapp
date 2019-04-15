@@ -29,7 +29,7 @@ else % IF REGULAR STRESS STEP
         writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Normally closed position, Keithley connected
         % Turn fan off if on
         if(MD(MUnb).MDdata_fanflag==1)
-            writeDigitalPin(Arduino,'A1',0); %Turn off Fan
+            writeDigitalPin(app.HW(MUnb).Arduino,'A1',0); %Turn off Fan
             message=['Turning off fan in Runbias_ext, MU number ',num2str(MUnb),'. Temperature: ',num2str(temp)];
             disp(message);
             pause(10); % Pause 10 s to let temperature stabilize after the fan has been turned off
