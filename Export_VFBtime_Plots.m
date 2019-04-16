@@ -1,11 +1,16 @@
-function Export_VFBtime_Plots(app,MD)
+function Export_VFBtime_Plots(app,varargin)
 % ExportVFBtime_1Pushed_ext
 % Exports all the Vfb vs time plots
+% The max total number of inputs is 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This function is called in CV_timeLoop.m (2 arguments: app and MD) and in the app when the export
+% button is pressed (1 argument: app)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 % ----------
 % app : obj
 %   A handle to the app designer gui object
-% MD : struct
+% varargin: struct
 %   A data structure containing all measurement data
 %
 % Generate sample data to test:
@@ -19,6 +24,31 @@ function Export_VFBtime_Plots(app,MD)
 % for i=1:3 MD(i).PinState = pinStates(i,:); MD(i).ExpData.Setup.StressBiasValue = stressBias; MD(i).ExpData.Setup.TempH = stressTemp; MD(i).ExpData.Setup.biastime_sec=600; for j=1:10 MD(i).ExpData.Pin(j).VfbAve=vfb(:,j); MD(i).ExpData.Pin(j).tfb = tfb(:,j); end; end
 % app.FileLoc.Value = pwd;
 
+% Find whether MD should be pulled from the saved .mat file (case when the function is
+% called from the export button) or from the MD structure (case when the
+% function is called in CV_timeloop)
+if(nargin==1) % MD is not an input, so it is fetched from the saved .mat file
+    folder=app.FileLoc;
+    path1=app.DataFileName_MU1;
+    path2=app.DataFileName_MU2;
+    path3=app.DataFileName_MU3;
+    fullpath1=folder+"\"+path1+".mat";
+    fullpath2=folder+"\"+path2+".mat";
+    fullpath3=folder+"\"+path3+".mat";
+    load(fullpath1,'-mat','MD_1');
+    load(fullpath2,'-mat','MD_2');
+    load(fullpath3,'-mat','MD_3');
+    MD(1)=MD_1;
+    MD(2)=MD_2;
+    MD(3)=MD_3;
+else
+    if(nargin==2) % MD is an input
+        MD=varargin{1}; 
+    else
+        error('Too many arguments.');
+    end
+end
+
     markers = ["o","s","d","^","v",">","<","p","h"];
     legendLabels = "Pin " + (1:8);
     % Iterate over all the measurement units
@@ -29,7 +59,6 @@ function Export_VFBtime_Plots(app,MD)
         stressBias  = MD(k).ExpData.Setup.StressBiasValue;
         % Get the value of the stress temperature
         stressTemp  = MD(k).ExpData.Setup.TempH;
-        
         
         % Get the number of lines to be plotted
         % Get a colormap for the dataset

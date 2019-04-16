@@ -1,6 +1,11 @@
-function Export_CV_Plots(app,MD)
+function Export_CV_Plots(app,varargin)
 % Export_CV_Plots
 % Exports all the CV plots
+% The max total number of inputs is 2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This function is called in CV_timeLoop.m (2 arguments: app and MD) and in the app when the export
+% button is pressed (1 argument: app)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 % ----------
 % app : obj
@@ -22,6 +27,31 @@ function Export_CV_Plots(app,MD)
 
     % Clear all figures
 %     clf; shg;
+
+% Find whether MD should be pulled from the saved .mat file (case when the function is
+% called from the export button) or from the MD structure (case when the
+% function is called in CV_timeloop)
+if(nargin==1) % MD is not an input, so it is fetched from the saved .mat file
+    folder=app.FileLoc.Value;
+    path1=app.DataFileName_MU1.Value;
+    path2=app.DataFileName_MU2.Value;
+    path3=app.DataFileName_MU3.Value;
+    fullpath1=folder+"\"+path1+".mat";
+    fullpath2=folder+"\"+path2+".mat";
+    fullpath3=folder+"\"+path3+".mat";
+    load(fullpath1,'-mat','MD_1');
+    load(fullpath2,'-mat','MD_2');
+    load(fullpath3,'-mat','MD_3');
+    MD(1)=MD_1;
+    MD(2)=MD_2;
+    MD(3)=MD_3;
+else
+    if(nargin==2) % MD is an input
+        MD=varargin{1}; 
+    else
+        error('Too many arguments.');
+    end
+end
 
     % Iterate over all the measurement units
     for k=1:3
