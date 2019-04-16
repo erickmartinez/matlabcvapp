@@ -53,8 +53,16 @@ for p = 1:length(PinState) %For each pin
                 %                     writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Connect impedance analyzer and disconnect Keithley
                 writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); %Turn on desired pogo-pin
                 % LampSet(p) = LampColor(p); %Turn on pin lamp
+				% Log the elapsed time (since the begining of the experiment) when the
+				% CV starts being collected in the pin p.
+				CVStartTime = toc;
+				MD(MUnb).ExpData.Pin(p).tCV = ...
+                    [MD(MUnb).ExpData.Pin(p).tCV CVStartTime];
+                % Log this event in the temperature plot
+				eventsOnTempPlot(app,MUnb,timeCompleted,...
+                    strcat("CV starts pin",p),p);
                 [Cmeas, Rmeas, Vmeas] = RunProgCV(app, CVprogram); %Run CV measurement
-                MD(MUnb).MDdata.CVStartTime=[MD(MUnb).MDdata.CVStartTime, toc];
+                MD(MUnb).MDdata.CVStartTime=[MD(MUnb).MDdata.CVStartTime, CVStartTime];
                 % Preallocate the structures at the beginning based on the max number of iterations
                 MD(MUnb).ExpData.Pin(p).C = [MD(MUnb).ExpData.Pin(p).C Cmeas]; %Save capacitance data in pin struct
                 MD(MUnb).ExpData.Pin(p).R = [MD(MUnb).ExpData.Pin(p).R Rmeas]; %Save resistance data in pin struct

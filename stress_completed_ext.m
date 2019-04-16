@@ -26,6 +26,12 @@ if(time_inc>=biastime_sec && Temp<=StressT+3 && Temp>= StressT-3) % Allow error 
     for p = 1:length(PinState) %Parse through all  pins
         writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0); %Set all available pins to 0 or off
     end
+	% Log the time at which the stress bias was completed
+	timeCompleted = toc;
+	MD(MUnb).ExpData.log.endBiasTime = [MD(MUnb).ExpData.log.endBiasTime, ...
+        timeCompleted];
+    % Log this event in the temperature plot
+	eventsOnTempPlot(app,MUnb,timeCompleted,'Stress Completed');
 end
 
 clear Arduino
