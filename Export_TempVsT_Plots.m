@@ -18,9 +18,9 @@ function Export_TempVsT_Plots(app,varargin)
 % function is called in CV_timeloop)
 if(nargin==1) % MD is not an input, so it is fetched from the saved .mat file
     folder=app.FileLoc;
-    path1=app.DataFileName_MU1;
-    path2=app.DataFileName_MU2;
-    path3=app.DataFileName_MU3;
+    path1=app.DataFileName_MU1.Value;
+    path2=app.DataFileName_MU2.Value;
+    path3=app.DataFileName_MU3.Value;
     fullpath1=folder+"\"+path1+".mat";
     fullpath2=folder+"\"+path2+".mat";
     fullpath3=folder+"\"+path3+".mat";

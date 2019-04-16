@@ -30,7 +30,7 @@ else % IF REGULAR STRESS STEP
         % Turn fan off if on
         if(MD(MUnb).MDdata_fanflag==1)
             writeDigitalPin(app.HW(MUnb).Arduino,'A1',0); %Turn off Fan
-            message=['Turning off fan in Runbias_ext, MU number ',num2str(MUnb),'. Temperature: ',num2str(temp)];
+            message=['Turning off fan in Runbias_ext, MU number ',num2str(MUnb),'. Temperature: ',num2str(Temp)];
             disp(message);
             pause(10); % Pause 10 s to let temperature stabilize after the fan has been turned off
             MD(MUnb).MDdata_fanflag=0; % Set fan flag to 0 after the fan has been turned off
