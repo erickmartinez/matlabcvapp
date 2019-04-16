@@ -12,7 +12,8 @@ PinState=MD(MUnb).PinState;
 ArdPins=MD(MUnb).ArdP;
 
 time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recorded bias starting time for this measurement unit
-if(time_inc>=biastime_sec && getTC(app,MUnb)<=StressT+3 && getTC(app,MUnb)>= StressT-3) % Allow error of +/- 3 °C in temperature. Temperature condition to avoid turning on the fan if ramping has already started or if room T has been reached  NOTE: temperature check here not necessary, might prevent running this code if temperature is out of range for some reason
+Temp=getTC(app,MUnb);
+if(time_inc>=biastime_sec && Temp<=StressT+3 && Temp>= StressT-3) % Allow error of +/- 3 °C in temperature. Temperature condition to avoid turning on the fan if ramping has already started or if room T has been reached  NOTE: temperature check here not necessary, might prevent running this code if temperature is out of range for some reason
     if(getTC(app,MUnb)>=CoolT+Err) % if T is larger than cool T, the fan will be turned on
         writeDigitalPin(Arduino,'A1',1); %Turn on Fan if current T is different from cooling T, ie case where stressing and cooling T identical (verify pin number).
         MD(MUnb).MDdata_fanflag=1; % Set fan flag to 1 after the fan has been turned on
@@ -25,6 +26,10 @@ if(time_inc>=biastime_sec && getTC(app,MUnb)<=StressT+3 && getTC(app,MUnb)>= Str
     for p = 1:length(PinState) %Parse through all  pins
         writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0); %Set all available pins to 0 or off
     end
+	% Log the time at which the stress bias was completed
+	timeCompleted = toc;
+	MD(MUnb).ExpData.log.endBiasTime = [MD(MUnb).ExpData.log.endBiasTime, ...timeCompleted];
+	eventsOnTempPlot(app,MUnb,timeCompleted,'Stress Completed');
 end
 
 clear Arduino
