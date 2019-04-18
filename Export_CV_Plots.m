@@ -58,7 +58,7 @@ end
         % Get the pin states for the current unit
         pinStates   = MD(k).PinState;
         % Get the value of the stress bias
-        stressBias  = MD(k).ExpData.Setup.StressBiasValue;
+        stressBias  = MD(k).ExpData.Setup.stressBiasValue;
         % Get the value of the stress temperature
         stressTemp  = MD(k).ExpData.Setup.TempH;
         % Get the stress time in seconds

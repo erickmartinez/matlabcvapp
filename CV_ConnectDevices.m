@@ -34,10 +34,11 @@ Ard_COM_table=[8,7,6];
         try
             % Define serial connection to hotplate
             HW(i).HP = serial(COM_HP, 'BaudRate', 9600, 'DataBits',8,'StopBits',1); 
+            %Set timeout to 3 second
+            set(HW(i).HP, 'timeout',0.5); 
+            set(HW(i).HP,'InputBufferSize',8);
             % Open Connection
             fopen(HW(i).HP); 
-            %Set timeout to 3 second
-            set(HW(i).HP, 'timeout',3); 
             turnHPLampOnOff(app,i,1);
             pause(0.5);
         catch e
@@ -55,7 +56,8 @@ Ard_COM_table=[8,7,6];
             %Define arduino connection
             HW(i).Arduino = arduino(COM_Ard,'Uno','Libraries','SPI');
             %Define connection through arduino to thermocouple
-            HW(i).Therm = spidev(HW(i).Arduino,'D10','Bitrate',5e6); 
+            % HW(i).Therm = spidev(HW(i).Arduino,'D10','Bitrate',5e6); 
+            HW(i).Therm = device(HW(i).Arduino,'SPIChipSelectPin','D10','Bitrate',5e6); 
             turnArduinoLampOnOff(app,i,1);
             pause(0.5);
         catch e

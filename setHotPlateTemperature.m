@@ -4,8 +4,8 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,temperature)
 %   hotplateNumber: a number corresponding to the hotplate
 %   temperature: the temperature in °C
     % Get the handle to the hotplate
-    TargetTempH=MD(hotplateNumber).ExpData.Setup.TempH;
-    TargetTempC=MD(hotplateNumber).ExpData.Setup.TempC;
+%     TargetTempH=MD(hotplateNumber).ExpData.Setup.TempH;
+%     TargetTempC=MD(hotplateNumber).ExpData.Setup.TempC;
     hotplate_handle = app.HW(hotplateNumber).HP;
     HT = floor(temperature/25.6); %Set high temp value 
     LT = mod(temperature,25.6)*10; %Set low temp value 
@@ -17,20 +17,21 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,temperature)
             fwrite(hotplate_handle,array(j),'uint8'); %Write to hotplate
             pause(.05)
         end
-        out = fread(hotplate_handle); %Read out hotplate response
-
-        if isempty(out) %If not responce
-            fprintf("Temperature set point on hotplate %d not successful.",...
+%         pause(0.1);
+        out = fread(hotplate_handle,6); %Read out hotplate response
+        flushoutput(hotplate_handle); % removes data from the output buffer
+        if (isempty(out) || out(3) == 1)  %If no response
+            fprintf("Temperature set point on hotplate %d not successful. Trying again...\n",...
                 hotplateNumber);
+            setHotPlateTemperature(app,MD,hotplateNumber,temperature);
             success = 0;
         else
             success = 1;
-%             fprintf("Temperature set to %.1f °C on hotplate %d, corresponding to a surface heating temperature of %.1f °C or a surface cooling temperature of %.1f °C",...
-%                 temperature,hotplateNumber,TargetTempH,TargetTempC);
-disp('HP temperature set');
+            fprintf('HP%d temperature set: %.1f\n',hotplateNumber,temperature);
         end
     catch
         warndlg(sprintf('Error communicating with hotplate %d',hotplateNumber),'Hotplate error');
     end
-
-pause(10); % Let temperature stabilize
+    clear hotplate_handle;
+    pause(1); % Let temperature stabilize
+end

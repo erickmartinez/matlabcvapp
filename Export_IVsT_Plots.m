@@ -51,13 +51,13 @@ end
         % Determine if we the measurement unit is connected
         isConnected = any(MD(k).PinState);
         if isConnected == 1
-            stressBias      = MD(k).ExpData.Setup.StressBiasValue;
+            stressBias      = MD(k).ExpData.Setup.stressBiasValue;
             iTime = MD(1).ExpData.log.Itime./timeFactor;
             plot(iTime,MD(k).ExpData.log.I,'o-','LineWidth',2);
         end
     end % ends for k=1:3
     hold off
-    title
+    title('Current as a function of time');
     xlabelStr = sprintf("Time (%s)",timeUnit);
     xlabel(xlabelStr);
     ylabel("I (A)");

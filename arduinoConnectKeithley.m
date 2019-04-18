@@ -11,7 +11,6 @@ function arduinoConnectKeithley(app,arduinoNumber)
     % Get the handle to the corresponding arduino:
     a = app.HW(arduinoNumber).Arduino;
     try
-        %WriteDigitalPin(a,'A0',1); % Normally closed position, Keithley connected
         configurePin(a,'A0','unset'); % The pin is no longer reserved and can be automatically set at the next operation.
     catch
         warndlg(sprintf('Error connecting Keithley on arduino %d',...

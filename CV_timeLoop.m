@@ -38,10 +38,7 @@ function CV_timeLoop(app,MD,CVProgram)
     %% Save measuremement and log data of current unit and log data of other units
     saveMDdata(app,MD);
     
-    % When finished, disconnect all POGO pins, disconnect Impedance
-    % Analyzer, turn off all the hotplates, turn off the fans, and delete
-    % visa objects
-    CV_RebootSystem(app,MD);
+    
     % Export all CV plots
     Export_CV_Plots(app,MD);
     % Export all VFB plots
@@ -51,6 +48,9 @@ function CV_timeLoop(app,MD,CVProgram)
     % Export all Temp vs T plots
     Export_TempVsT_Plots(app,MD);
     
+    % When finished, disconnect all POGO pins, disconnect Impedance
+    % Analyzer, turn off all the hotplates, turn off the fans, and delete
+    % gpib objects
     CV_RebootSystem(app,MD);
     app.stopFlag = 0;
     app.idleFlag = 1;

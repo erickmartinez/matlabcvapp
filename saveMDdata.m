@@ -4,7 +4,7 @@ function saveMDdata(app,MD)
     % FileLoc is the folder chosen in the app, DataFileName is the name given
     % by the user to the measurement.
     MD_1=MD(1); % Save only the Measurement Data of unit 1
-    disp(app.DataFileName_MU1.Value);
+%     disp(app.DataFileName_MU1.Value);
     save(app.FileLoc.Value+"\"+app.DataFileName_MU1.Value+".mat",'MD_1'); % Save MD data
     
     MD_2=MD(2); % Save only the Measurement Data of unit 2
