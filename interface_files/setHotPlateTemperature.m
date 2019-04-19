@@ -89,11 +89,11 @@ function [success] = setHotPlateTemperature(h,temperature,failedCalls)
             fprintf('Error communicating with hotplate %d\n',h);
             success = 0;
         end % try catch
-        % If the hotplate is off send the command again
-        if getHotPlateTemperatureStatus(h) == 1
-            fprintf("Hotplate turned off, turining it on...\n");
-            success = setHotPlateTemperature(h,temperature);
-        end
+%         % If the hotplate is off send the command again
+%         if getHotPlateTemperatureStatus(h) == 1
+%             fprintf("Hotplate turned off, turining it on...\n");
+%             success = setHotPlateTemperature(h,temperature);
+%         end
         pause(1); % Let temperature stabilize
     end % if (currentSetPoint ~= temperature || ...
 end % function
