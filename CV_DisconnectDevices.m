@@ -17,8 +17,7 @@ function CV_DisconnectDevices(app)
     HW = app.HW;
     if(~isempty(HW))
         try
-
-            for i=1:3
+            for i=length(HW)
                 % Print waitbar
                 message1=['Disconnecting Instruments:Hotplate ',num2str(i),'... Please Wait'];
                 waitbar((2*i-1)/8,wb,message1);
@@ -43,9 +42,9 @@ function CV_DisconnectDevices(app)
             message3='Disconnecting Instruments:Keithley ... Please Wait';
             waitbar(7/8,wb,message3);
             %Delete visa object to Keithley 2401 (K2401) if found
-            if(~isempty(HW(1).KEITH))
+            if isfield(HW(1),'KEITH')
                 fprintf(HW(1).KEITH, ":OUTP OFF"); %Turn Off Source Output
-                for mu=1:3
+                for mu=1:length(HW)
                     fclose(HW(mu).KEITH);
                 end
             end
@@ -56,8 +55,8 @@ function CV_DisconnectDevices(app)
             message4='Disconnecting Instruments:Impedance Analyzer ... Please Wait';
             waitbar(1,wb,message4);
             %Delete Impedance Analyzer visa object if it already exists
-            if(~isempty(HW(1).IMPA))
-                for mu=1:3
+            if isfield(HW(1),'IMPA')
+                for mu=1:length(HW)
                     fclose(HW(mu).IMPA);
                 end
             end

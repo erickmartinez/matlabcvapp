@@ -13,11 +13,13 @@ ArdPins=MD(MUnb).ArdP;
 
 time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recorded bias starting time for this measurement unit
 Temp=getTC(app,MUnb);
-if(time_inc>=biastime_sec && Temp<=StressT+3 && Temp>= StressT-3) % Allow error of +/- 3 °C in temperature. Temperature condition to avoid turning on the fan if ramping has already started or if room T has been reached  NOTE: temperature check here not necessary, might prevent running this code if temperature is out of range for some reason
+if(time_inc>=biastime_sec && Temp<=StressT+Err && Temp>= StressT-Err && MD(MUnb).MDdata.bias_on_flag) % Allow error of +/- 3 °C in temperature. Temperature condition to avoid turning on the fan if ramping has already started or if room T has been reached  NOTE: temperature check here not necessary, might prevent running this code if temperature is out of range for some reason
     if(getTC(app,MUnb)>=CoolT+Err) % if T is larger than cool T, the fan will be turned on
         writeDigitalPin(Arduino,'A1',1); %Turn on Fan if current T is different from cooling T, ie case where stressing and cooling T identical (verify pin number).
         MD(MUnb).MDdata_fanflag=1; % Set fan flag to 1 after the fan has been turned on
     end
+    message_endstress=sprintf('Stopping bias and cooling HP on unit %d', MUnb);
+    disp(message_endstress);
     MD(MUnb).MDdata.stress_completed_flag=1; % Set stress completed flag to 1
     % Stop hotplate
     setHotPlateTemperature(app, MD, MUnb, MD(MUnb).ExpData.Setup.CalTempC); % Set hotplate temperature to the cool temperature, corrected using the calibration curve
@@ -30,8 +32,7 @@ if(time_inc>=biastime_sec && Temp<=StressT+3 && Temp>= StressT-3) % Allow error 
 	timeCompleted = toc;
 	MD(MUnb).ExpData.log.endBiasTime = [MD(MUnb).ExpData.log.endBiasTime, ...
         timeCompleted];
-    % Log this event in the temperature plot
-	eventsOnTempPlot(app,MUnb,timeCompleted,'Stress Completed');
+    MD(MUnb).MDdata.bias_on_flag=0; % Set flag to 0 after bias has been turned off
 end
 
 clear Arduino

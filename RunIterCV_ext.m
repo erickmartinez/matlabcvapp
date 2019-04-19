@@ -58,9 +58,7 @@ for p = 1:length(PinState) %For each pin
 				CVStartTime = toc;
 				MD(MUnb).ExpData.Pin(p).tCV = ...
                     [MD(MUnb).ExpData.Pin(p).tCV CVStartTime];
-                % Log this event in the temperature plot
-				eventsOnTempPlot(app,MUnb,timeCompleted,...
-                    strcat("CV starts pin",p),p);
+                
                 [Cmeas, Rmeas, Vmeas] = RunProgCV(app, CVprogram); %Run CV measurement
                 MD(MUnb).MDdata.CVStartTime=[MD(MUnb).MDdata.CVStartTime, CVStartTime];
                 % Preallocate the structures at the beginning based on the max number of iterations

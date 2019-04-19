@@ -37,8 +37,7 @@ MD=fanoff_ext(app, MD, MUnb);
 % condition is set on the time elapsed since biasstarttime.
 time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recorded bias starting time for this measurement unit
 Temp=getTC(app,MUnb);
-if(abs(Temp - CoolT) <= Err && MD(MUnb).MDdata.meas_flag==0 ...
-        && MD(MUnb).MDdata.stress_completed_flag==1 && MD(MUnb).MDdata.finish_flag ~= 1) % What if both bias and measurement are performed at room temperature? add a stress completed flag
+if(Temp<=CoolT+Err && Temp>=CoolT-Err && MD(MUnb).MDdata.meas_flag==0 && MD(MUnb).MDdata.stress_completed_flag==1) % What if both bias and measurement are performed at room temperature? add a stress completed flag
     if(time_inc>=stressBiasTime_sec || MD(MUnb).MDdata.startbiastime(end)==0) % For the first measurement, startbiastime is set to 0 for initialization
         % In case the fan is still on, turn it off
         if(MD(MUnb).MDdata_fanflag==1)
@@ -55,8 +54,8 @@ if(abs(Temp - CoolT) <= Err && MD(MUnb).MDdata.meas_flag==0 ...
         
         writeDigitalPin(Arduino,'A0',1) % Turn off the toggle switch board (NEEDS TO BE AT HIGH POTENTIAL TO BE ON), ie connect to the Keithley
         % Start ramping temperature of the hotplate to the stress temperature
-        setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH); %Turn off desired hotplate
-        setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH); %Turn on heating & set to stress temperature of desired hotplate
+        setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH) %Turn off desired hotplate
+        setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH) %Turn on heating & set to stress temperature of desired hotplate
         MD(MUnb).MDdata.meas_flag=1; % Set flag to 1 after measurement completed
         MD(MUnb).MDdata.stress_completed_flag=0; % Set stress completed flag to 0 as the new stress cycle has not been completed 
     end

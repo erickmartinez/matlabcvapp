@@ -1,5 +1,4 @@
-function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
-    temperature,failedCalls)
+function [success] = setHotPlateTemperature(app,MD,hotplateNumber,temperature,ca)
 % setHotPlateTemperature
 % Sends the temperature setpoint to the hotplate
 % Parameters
@@ -10,8 +9,6 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
 %   a number corresponding to the hotplate
 % temperature: int 
 %   The temperature in °C
-% failedCalls : int
-%   The number of times the function has been called and produced an error
 %
 % Returns
 % -------
@@ -44,12 +41,6 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
     % TargetTempC=MD(hotplateNumber).ExpData.Setup.TempC;
     % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     % Consider removing
-    
-    MAX_FAILED_CALLS = 20;
-    % If failedCalls not int the arguments failedCalls = 0
-    if ~exist('failedCalls','var')
-        failedCalls = 0;
-    end
     
     % First check if the set temperature is equal to the the set temp in
     % the hotplate
@@ -86,23 +77,13 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
             %Read out hotplate response
             out = fread(h,6); 
             flushoutput(h); % removes data from the output buffer
-            flushinput(h); % removes data from the input buffer associated with obj.
+            flushinpput(h); % removes data from the input buffer associated with obj.
             if (isempty(out) || out(3) == 1)  %If no response or error
-                fprintf("Temperature set point on hotplate %d not successful.\n",...
+                fprintf("Temperature set point on hotplate %d not successful. Trying again...\n",...
                     hotplateNumber);
                 clear h;
-                
-                failedCalls = failedCalls + 1;
-                % Retry (unless maximu number of attemps has been reached)
-                if failedCalls <= MAX_FAILED_CALLS
-                    pause(0.1);
-                    fprintf("Trying again...\n");
-                    success = setHotPlateTemperature(app,MD,hotplateNumber,...
-                        temperature,failedCalls);
-                else
-                    error("Exceeded number of attempts to set temperature on HP%d",...
-                        hotplateNumber);
-                end
+                pause(0.1);
+                success = setHotPlateTemperature(app,MD,hotplateNumber,temperature);
             else
                 success = 1;
                 fprintf('HP%d temperature set: %.1f\n',hotplateNumber,temperature);
@@ -112,11 +93,6 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
             success = 0;
             clear h;
         end % try catch
-        % If the hotplate is off send the command again
-        if getHotPlateTemperatureStatus(app,hotplateNumber) == 1
-            fprintf("HP%d off, turining it back on...\n",hotplateNumber);
-            success = setHotPlateTemperature(app,MD,hotplateNumber,temperature);
-        end
         pause(1); % Let temperature stabilize
     end % if (currentSetPoint ~= temperature || ...
 end % function

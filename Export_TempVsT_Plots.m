@@ -56,7 +56,7 @@ end
         isConnected = any(MD(k).PinState);
         if isConnected == 1
             % Get the value of the stress bias
-            stressBias      = MD(k).ExpData.Setup.StressBiasValue;            
+            stressBias      = MD(k).ExpData.Setup.stressBiasValue;            
             % Construct the labels for the line
             legendLabels{k} = sprintf("MU%d, stress Bias = %.1f V",...
                     k,stressBias);

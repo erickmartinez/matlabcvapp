@@ -1,12 +1,12 @@
-function eventsOnTempPlot(app,mu,ts,txt,pinNumber)
+function eventsOnTempPlot(MD,mu,ts,txt,pinNumber)
 % eventsOnTempPlot
 % Adds text labels corresponding to measurement events to the
 % temperature plots
 %
 % Parameters
 % ----------
-% app : obj
-%	A handle to the app designer GUI instance
+% MD : strcut
+%	The data structure with the logged values of temperature and time
 % mu : int
 %	The number of the measurement unit where the event occurs
 % ts : float
@@ -15,22 +15,30 @@ function eventsOnTempPlot(app,mu,ts,txt,pinNumber)
 %	The description of the event
 % pinNumber : int
 %	The pinNumber where the event occurs (optional)
-
+    global realTimeTempFig;
+    global phLogHP;
+  
 	if ~exist('pinNumber','var')
 		pinNumber = 0;
-	end
+    end
+    
+    if ~exist('realTimeTempFig')
+        realTimeTempFig = figure;
+        for i=1:3
+            loggedTemp(i) = MD(i).ExpData.log.T;
+            loggedTime(i) = MD(i).ExpData.log.Ttime;
+            subplot(3,1,i)
+            phLogHP(i) = plot(realTimeTempFig,loggedTemp(i),loggedTime(i),'o');
+            title(sprintf("Hotplate %d", i));
+            xlabel("Time (hr)");
+            ylabel("Temperature (°C)");
+        end
+    end
+    
+ 	
 	
 	% Get the time in hr
 	timeHr = ts/3600;
-
-	% The handles to the plot in the app designer
-	if mu == 1
-		plotHandle = Tpanel=app.TempTime_1;
-	elseif mu == 2
-		plotHandle = Tpanel=app.TempTime_2;
-	elseif mu == 3
-		plotHandle = Tpanel=app.TempTime_3;
-	end
 	
 	cp = flipud(jet(8));
 	% If provided pin number use color palette else use black
@@ -41,17 +49,18 @@ function eventsOnTempPlot(app,mu,ts,txt,pinNumber)
 	end
 
 	% Get the y limits of the plot
-	[ymin, ymax] = ylim(plotHandle);
+	yRange = ylim(phLogHP(mu));
+    ymin = yRange(1);
+    ymax = yRange(2);
 	% create a line in the plot
-	plot(plotHandle,[timeHr; timeHr], [ymin ymax],':','Color',[0.5,0.5,0.5]);
+	plot(phLogHP(mu),[timeHr; timeHr], [ymin ymax],':','Color',[0.5,0.5,0.5]);
 	
 	info_str = "\leftarrow " + txt + " ";
-	info_txt = text(plotHandle,timeHr,0.95*ymax,info_str,...
+	info_txt = text(phLogHP(mu),timeHr,0.95*ymax,info_str,...
 		'HorizontalAlignment','right',...
 		'VerticalAlignment','top');
 	info_txt.Color    = c;
 	info_txt.FontSize = 8;
 	info_txt.Rotation = 90;
-    refresh(plotHandle);
-	drawnow;
+	drawnow
 end

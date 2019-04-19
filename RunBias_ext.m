@@ -30,11 +30,9 @@ else % IF REGULAR STRESS STEP
         %writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Normally closed position, Keithley connected
 		arduinoConnectKeithley(app,MUnb);
 		% Save the time at which the stress bias starts
-		stressTimeStart = toc
+		stressTimeStart = toc;
 		MD(MUnb).ExpData.log.startbiastime = ...
             [MD(MUnb).ExpData.log.startbiastime stressTimeStart];
-        % Log this event in the temperature plot
-		eventsOnTempPlot(app,MUnb,stressTimeStart,'Stress Started');
         % Turn fan off if on
         if(MD(MUnb).MDdata_fanflag==1)
             writeDigitalPin(app.HW(MUnb).Arduino,'A1',0); %Turn off Fan
@@ -55,6 +53,7 @@ else % IF REGULAR STRESS STEP
         MD(MUnb).MDdata.meas_flag=0; % Set meas flag to 0 after bias has been started
         MD(MUnb).MDdata.cycle_counter=MD(MUnb).MDdata.cycle_counter+1; % Increase the loop counter by one
         MD=logvalues_ext(app, MD, MUnb);% log T and I values
+        MD(MUnb).MDdata.bias_on_flag=1;
     end
 end
 
