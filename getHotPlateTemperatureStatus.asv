@@ -1,0 +1,35 @@
+function [status] = getHotPlateTemperatureStatus(app,hotplateNumber)
+% getHotPlateTemperatureStatus
+% Gives the set temperature status of the hotplate
+% From SCILOGEX
+% 3.5 Temperature control
+% Parameters
+% ----------
+% app : obj
+%   A handle to the app designer GUI instance
+% hotplateNumber : int
+%   The number of the hotplate to read the temperature on
+% 
+% Returns
+% -------
+% status : bool
+%   The status of the temperature
+
+    % From SCILOGEX
+    % Section 3.2 Get information
+    %
+    % Command:
+    % -------------------------------------------------------
+    %  1   | 2    | 3    | 4    | 5    | 6
+    % -------------------------------------------------------
+    % 0xfe | 0xA1 | NULL | NULL | NULL | Check sum
+    % -------------------------------------------------------
+    % Response:
+    % -------------------------------------------------------
+    %  1   | 2    | 3,4,5,6,7,8,9,10 | 11  
+    % -------------------------------------------------------
+    % 0xfd | 0xA2 | Parameter1... 8  | Check sum
+    % -------------------------------------------------------
+    % Parameter5: temp set (high)
+    % Parameter6: temp set (low)
+end

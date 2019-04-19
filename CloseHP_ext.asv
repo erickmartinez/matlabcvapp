@@ -1,9 +1,0 @@
-function CloseHP_ext(app, HW, MUnb, COM) %Function to Close/Clear Hotplate Serial Object
-% CloseHP_ext
-% Dele
-try
-fclose(HW(MUnb).HP); %Close object
-delete(HW(MUnb).HP); %Delete object in workspace
-% clear(HW(MUnb).HP); <-- Already deleted
-delete(instrfind('Port',COM)) %Delete connection to communication port
-end

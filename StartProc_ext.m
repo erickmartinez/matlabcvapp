@@ -14,21 +14,21 @@ function  StartProc_ext(app)
 
         %Turns off holds for/reset all plots in app
         % Unit 1
-        hold(app.It_1,'off'); hold(app.VFBtime_1,'off'); hold(app.TempTime_1,'off')
+        hold(app.It_1,'off'); hold(app.VFBtime_1,'off'); hold(app.TempTime_1,'on')
         hold(app.CV1_1,'off'); hold(app.CV2_1,'off'); hold(app.CV3_1,'off'); hold(app.CV4_1,'off');
         hold(app.CV5_1,'off'); hold(app.CV6_1,'off'); hold(app.CV7_1,'off'); hold(app.CV8_1,'off');
         hold(app.byC2_1_1,'off'); hold(app.byC2_2_1,'off'); hold(app.byC2_3_1,'off'); hold(app.byC2_4_1,'off');
         hold(app.byC2_5_1,'off'); hold(app.byC2_6_1,'off'); hold(app.byC2_7_1,'off'); hold(app.byC2_8_1,'off');
 
         % Unit 2
-        hold(app.It_2,'off'); hold(app.VFBtime_2,'off'); hold(app.TempTime_2,'off')
+        hold(app.It_2,'off'); hold(app.VFBtime_2,'off'); hold(app.TempTime_2,'on')
         hold(app.CV1_2,'off'); hold(app.CV2_2,'off'); hold(app.CV3_2,'off'); hold(app.CV4_2,'off');
         hold(app.CV5_2,'off'); hold(app.CV6_2,'off'); hold(app.CV7_2,'off'); hold(app.CV8_2,'off');
         hold(app.byC2_1_2,'off'); hold(app.byC2_2_2,'off'); hold(app.byC2_3_2,'off'); hold(app.byC2_4_2,'off');
         hold(app.byC2_5_2,'off'); hold(app.byC2_6_2,'off'); hold(app.byC2_7_2,'off'); hold(app.byC2_8_2,'off');
 
         % Unit 3
-        hold(app.It_3,'off'); hold(app.VFBtime_3,'off'); hold(app.TempTime_3,'off')
+        hold(app.It_3,'off'); hold(app.VFBtime_3,'off'); hold(app.TempTime_3,'on')
         hold(app.CV1_3,'off'); hold(app.CV2_3,'off'); hold(app.CV3_3,'off'); hold(app.CV4_3,'off');
         hold(app.CV5_3,'off'); hold(app.CV6_3,'off'); hold(app.CV7_3,'off'); hold(app.CV8_3,'off');
         hold(app.byC2_1_3,'off'); hold(app.byC2_2_3,'off'); hold(app.byC2_3_3,'off'); hold(app.byC2_4_3,'off');

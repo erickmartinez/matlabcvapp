@@ -1,13 +1,10 @@
-function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
-    temperature,failedCalls)
+function [success] = setHotPlateTemperature(h,temperature,failedCalls)
 % setHotPlateTemperature
 % Sends the temperature setpoint to the hotplate
 % Parameters
 % ----------
-% app: obj
-%   A handle to the app designer GUI instance
-% hotplateNumber: int 
-%   a number corresponding to the hotplate
+% h: obj 
+%   The serial connection to the hotplate
 % temperature: int 
 %   The temperature in °C
 % failedCalls : int
@@ -38,12 +35,6 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
     % 0:OK
     % 1:fault
     
-    % Consider removing
-    % vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-    % TargetTempH=MD(hotplateNumber).ExpData.Setup.TempH;
-    % TargetTempC=MD(hotplateNumber).ExpData.Setup.TempC;
-    % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    % Consider removing
     
     MAX_FAILED_CALLS = 20;
     % If failedCalls not int the arguments failedCalls = 0
@@ -53,22 +44,12 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
     
     % First check if the set temperature is equal to the the set temp in
     % the hotplate
-    currentSetPoint = getHotPlateSetTemperature(app,hotplateNumber);
+    currentSetPoint = getHotPlateSetTemperature(h);
     
     % If the hotplate setpoint is different from the input temperature or
     % the hotplate temperature status is off, set the temperature
     if (currentSetPoint ~= temperature || ...
-            getHotPlateTemperatureStatus(app,hotplateNumber) == 1)
-    
-        % Get the handle to the hotplate
-        h = app.HW(hotplateNumber).HP;
-
-        % Consider removing
-        % vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-        % HT = floor(temperature/25.6); %Set high temp value 
-        % LT = mod(temperature,25.6)*10; %Set low temp value 
-        % ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        % Consider removing
+            getHotPlateTemperatureStatus(h) == 1)
 
         % Need to mulptiply by 10 to get the right temp setpoint
         T = temperature*10;
@@ -88,34 +69,30 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
             flushoutput(h); % removes data from the output buffer
             flushinput(h); % removes data from the input buffer associated with obj.
             if (isempty(out) || out(3) == 1)  %If no response or error
-                fprintf("Temperature set point on hotplate %d not successful.\n",...
-                    hotplateNumber);
-                clear h;
+                fprintf("Temperature set point on hotplate not successful.\n");
                 
                 failedCalls = failedCalls + 1;
                 % Retry (unless maximu number of attemps has been reached)
                 if failedCalls <= MAX_FAILED_CALLS
                     pause(0.1);
                     fprintf("Trying again...\n");
-                    success = setHotPlateTemperature(app,MD,hotplateNumber,...
+                    success = setHotPlateTemperature(h,...
                         temperature,failedCalls);
                 else
-                    error("Exceeded number of attempts to set temperature on HP%d",...
-                        hotplateNumber);
+                    error("Exceeded number of attempts to set temperature on HP");
                 end
             else
                 success = 1;
-                fprintf('HP%d temperature set: %.1f\n',hotplateNumber,temperature);
+                fprintf('HP temperature set: %.1f\n',temperature);
             end % (isempty(out) || out(3) == 1)
         catch
-            fprintf('Error communicating with hotplate %d\n',hotplateNumber);
+            fprintf('Error communicating with hotplate %d\n',h);
             success = 0;
-            clear h;
         end % try catch
         % If the hotplate is off send the command again
-        if getHotPlateTemperatureStatus(app,hotplateNumber) == 1
-            fprintf("HP%d off, turining it back on...\n",hotplateNumber);
-            success = setHotPlateTemperature(app,MD,hotplateNumber,temperature);
+        if getHotPlateTemperatureStatus(h) == 1
+            fprintf("Hotplate turned off, turining it
+            success = setHotPlateTemperature(h,temperature);
         end
         pause(1); % Let temperature stabilize
     end % if (currentSetPoint ~= temperature || ...

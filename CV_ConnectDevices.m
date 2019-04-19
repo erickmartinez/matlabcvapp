@@ -36,7 +36,9 @@ Ard_COM_table=[8,7,6];
             HW(i).HP = serial(COM_HP, 'BaudRate', 9600, 'DataBits',8,'StopBits',1); 
             %Set timeout to 3 second
             set(HW(i).HP, 'timeout',0.5); 
-            set(HW(i).HP,'InputBufferSize',8);
+            
+            % set(HW(i).HP,'InputBufferSize',8); <-- REMOVE ??
+            
             % Open Connection
             fopen(HW(i).HP); 
             turnHPLampOnOff(app,i,1);
