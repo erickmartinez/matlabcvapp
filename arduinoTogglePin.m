@@ -17,9 +17,9 @@ function arduinoTogglePin(app,arduinoNumber,pinNumber,value)
     a = app.HW(arduinoNumber).Arduino;
     try
         writeDigitalPin(a,char("D"+num2str(pinNumber)),value);
-    catch 
-        warndlg(sprintf('Error comunicating with Arduino %d pin %d',...
-                    arduinoNumber,pinNumber),'Arduino Error');
+    catch
+        logMessage(app,sprintf('Error comunicating with Arduino %d pin %d',...
+                    arduinoNumber,pinNumber));
     end
     clear a;
 end

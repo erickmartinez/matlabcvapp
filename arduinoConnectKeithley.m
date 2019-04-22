@@ -13,8 +13,8 @@ function arduinoConnectKeithley(app,arduinoNumber)
     try
         configurePin(a,'A0','unset'); % The pin is no longer reserved and can be automatically set at the next operation.
     catch
-        warndlg(sprintf('Error connecting Keithley on arduino %d',...
-            arduinoNumber),'Arduino error');
+        logMessage(app,sprintf('Error connecting Keithley on arduino %d',...
+            arduinoNumber));
     end
     clear a;
 end
