@@ -25,7 +25,7 @@ else % IF REGULAR STRESS STEP
 	% If the measurement temperature is reached and the measurement flag is 1 (measurement already performed)
     if(Temp<=setStressT+Err && Temp>=setStressT-Err && meas_flag==1) 
         message_bias=['Starting bias in Runbias_ext on MU ',num2str(MUnb)];
-        disp(message_bias);
+        logMessage(app,message_bias);
         
         %writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Normally closed position, Keithley connected
 		arduinoConnectKeithley(app,MUnb);
@@ -35,16 +35,18 @@ else % IF REGULAR STRESS STEP
             [MD(MUnb).ExpData.log.startbiastime stressTimeStart];
         % Turn fan off if on
         if(MD(MUnb).MDdata_fanflag==1)
-            writeDigitalPin(app.HW(MUnb).Arduino,'A1',0); %Turn off Fan
+%             writeDigitalPin(app.HW(MUnb).Arduino,'A1',0); %Turn off Fan
+            arduinoTurnFanOff(app,MUnb);
             message=['Turning off fan in Runbias_ext, MU number ',num2str(MUnb),'. Temperature: ',num2str(Temp)];
-            disp(message);
+            logMessage(app,message);
             pause(10); % Pause 10 s to let temperature stabilize after the fan has been turned off
             MD(MUnb).MDdata_fanflag=0; % Set fan flag to 0 after the fan has been turned off
         end
         % Turn on all pins if they have been activated by the user
         for p = 1:length(PinState) % Parse through all  pins
             if(PinState(p)) % If the pin has been activated by the user
-                writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1
+%                 writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1
+                arduinoTurnPinOn(app,MUnb,ArdPins(p));
             end
         end
         % Record bias starting time

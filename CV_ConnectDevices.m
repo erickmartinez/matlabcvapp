@@ -94,7 +94,7 @@ Ard_COM_table=[8,7,6];
         app.StatusLampKeithley.Color = [0 1 0];
     catch e
         success = 0;
-        display(e.message);
+        logMessage(app,e.message);
     end
     pause(0.5);
     % Print waitbar

@@ -11,7 +11,7 @@ function logMessage(app,msg)
 %   The message to be printed
 
     % Get the path from the GUI
-    filename = fullfile(app.FileLoc,'output.log');
+    filename = fullfile(string(app.FileLoc.Value),'output.log');
     % Create a time stamp and add it to the message
     dt = datestr(now,"yyyy/mm/dd hh:MM:ss");
     logMsg = sprintf('%s, %s\n', dt, msg);
@@ -19,8 +19,12 @@ function logMessage(app,msg)
     fprintf(logMsg);
     
     try
-        % open the log file in append mode
-        f = fopen(filename, 'a');
+        if isfile(filename)
+            % open the log file in append mode
+            f = fopen(filename, 'a');
+        else
+            f = fopen(filename, 'wt' );
+        end
         % append line to the file
         fprintf(f,logMsg);
         % close the file
