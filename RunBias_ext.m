@@ -49,8 +49,12 @@ else % IF REGULAR STRESS STEP
                 writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1
                 % log bias status here
                 MD(MUnb).ExpData.log.BiasStatus=[MD(MUnb).ExpData.log.BiasStatus, 1];
+                mess_bias=sprintf("Running bias on unit %d pin %d",MUnb,p);
+                logMessage(app,mess_bias);
             else
                 MD(MUnb).ExpData.log.BiasStatus=[MD(MUnb).ExpData.log.BiasStatus, 0];
+                mess_bias=sprintf("NOT running bias on unit %d pin %d",MUnb,p);
+                logMessage(app,mess_bias);
             end
         end
         % Record bias starting time
