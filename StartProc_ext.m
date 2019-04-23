@@ -318,6 +318,7 @@ function  StartProc_ext(app)
             % Get initial temperature value
             InitTemp = getTC(app,mu);
             MD(mu).ExpData.log.T = InitTemp;
+            MD(mu).ExpData.Pin(p).IV={}; % Empty struct array to save IV curve data
         end
 
         % Log current and temperature
@@ -346,13 +347,10 @@ function  StartProc_ext(app)
         tic; %Start recording time during measurement (logvalues_ext)
         
         % Take an IV measurement on each pin
-        for mu=1:3
-            for p=1:length(MD(mu).Pinstate)
-                if(PinState(p))
-                    MD(mu).ExpData.Pin(p).IV=[MD(mu).ExpData.Pin(p).IV, IVmeas(app,MD)];
-                end
-            end
-        end
+        MD=IVmeas(app,MD);
+        
+        message_IV='Initial IV measurement completed on all pins';
+        logMessage(app,message_IV);
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RUN PROCESS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         CV_timeLoop(app,MD,Prog_CV);

@@ -108,10 +108,6 @@ end
 message_finishflag=['Status of finish flag in RunIterCV: ',num2str(MD(MUnb).MDdata.finish_flag),' in unit',num2str(MUnb)];
 logMessage(app,message_finishflag);
 
-%%%% Take an IV measurement on each pin
-%%%%%%%%%% CODE HERE
-
-
 MD=FlatbandFitting_ext(app, MD, MUnb); %Fit flatband for pin
 % End of function
 
