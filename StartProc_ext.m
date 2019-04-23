@@ -339,9 +339,6 @@ function  StartProc_ext(app)
             % Hold all graphs
             hold(MD(mu).Plots.Temp,'on')
             hold(MD(mu).Plots.Current,'on')
-            
-            %% Take IV curves on each device
-            %%%%code here%%%%
         end
         app.stopFlag=0; % Flag to stop while loop
 
