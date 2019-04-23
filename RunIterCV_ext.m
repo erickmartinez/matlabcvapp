@@ -106,7 +106,7 @@ if(MD(MUnb).MDdata.cycle_counter==app.Iter_tot_gnl.Value)
     MD(MUnb).MDdata.finish_flag=1;
 end
 message_finishflag=['Status of finish flag in RunIterCV: ',num2str(MD(MUnb).MDdata.finish_flag),' in unit',num2str(MUnb)];
-disp(message_finishflag);
+logMessage(app,message_finishflag);
 
 %%%% Take an IV measurement on each pin
 %%%%%%%%%% CODE HERE
