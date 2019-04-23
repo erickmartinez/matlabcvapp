@@ -2,10 +2,9 @@ function MD=IVmeas(app,MD)
 % Function called to measure an IV curve on each device
 
 for mu=1:3
-    for p=1:length(MD(mu).Pinstate)
-        if(PinState(p))
-            arduinoTurnPinOn(app,mu,char("D"+num2str(MD(mu).ArdP(p))));% Turn pin on
-            
+    for p=1:length(MD(mu).PinState)
+        if(MD(mu).PinState(p))
+            writeDigitalPin(app.HW(mu).Arduino,char("D"+num2str(MD(mu).ArdP(p))),1); %Turn on desired pogo-pin
             Vmax=MD(1).ExpData.Setup.stressBiasValue;
             V_IV=-Vmax:0.1:Vmax; % Voltage values
             
@@ -22,7 +21,7 @@ for mu=1:3
             end
             
             MD(mu).ExpData.Pin(p).IV=[MD(mu).ExpData.Pin(p).IV, IVcurve]; % IVmeas return an array containing voltage in col 1 and current in col 2
-            arduinoTurnPinOff(app,mu,char("D"+num2str(MD(mu).ArdP(p))));% Turn pin off after measurement
+            writeDigitalPin(app.HW(mu).Arduino,char("D"+num2str(MD(mu).ArdP(p))),0); %Turn off desired pogo-pin
         end
     end
 end
@@ -30,7 +29,7 @@ end
 figure
 plot(MD(1).ExpData.Pin(4).IV(:,1),MD(1).ExpData.Pin(4).IV(:,2));
 title('Unit 1, pin 4');
-hold on
+figure
 plot(MD(2).ExpData.Pin(4).IV(:,1),MD(2).ExpData.Pin(4).IV(:,2));
 title('Unit 2, pin 4');
 
