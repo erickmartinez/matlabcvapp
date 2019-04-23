@@ -56,10 +56,10 @@ function [status] = hotplateHello(app,hotplateNumber,failedCalls)
             % Get the value of the set temp HT and LT from the hotplate
             status = out(3);
         else
-            fprintf("Handshake error on HP%d\n",hotplateNumber);
+            logMessage(app,sprintf("Handshake error on HP%d",hotplateNumber));
             % Retry (unless maximu number of attemps has been reached)
             if failedCalls <= MAX_FAILED_CALLS
-                fprintf("Trying again...\n");
+                logMessage(app,sprintf("Trying again..."));
                 pause(0.1);
                 status = hotplateHello(h,failedCalls);
             else
@@ -68,12 +68,12 @@ function [status] = hotplateHello(app,hotplateNumber,failedCalls)
             end
         end
     catch e
-        fprintf("Error performing the handshake with HP%d.\n",hotplateNumber);
+        logMessage(app,sprintf("Error performing the handshake with HP%d.",hotplateNumber));
         display(e.message);
         failedCalls = failedCalls + 1;
         % Retry (unless maximu number of attemps has been reached)
         if failedCalls <= MAX_FAILED_CALLS
-            fprintf("Trying again...\n");
+            logMessage(app,sprintf("Trying again..."));
             pause(0.1);
             status = hotplateHello(h,failedCalls);
         else

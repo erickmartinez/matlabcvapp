@@ -88,15 +88,15 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
             flushoutput(h); % removes data from the output buffer
             flushinput(h); % removes data from the input buffer associated with obj.
             if (isempty(out) || out(3) == 1)  %If no response or error
-                fprintf("Temperature set point on hotplate %d not successful.\n",...
-                    hotplateNumber);
+                logMessage(app,sprintf("Temperature set point on hotplate %d not successful.",...
+                    hotplateNumber));
                 clear h;
                 
                 failedCalls = failedCalls + 1;
                 % Retry (unless maximu number of attemps has been reached)
                 if failedCalls <= MAX_FAILED_CALLS
                     pause(0.1);
-                    fprintf("Trying again...\n");
+                    logMessage(app,sprintf("Trying again..."));
                     success = setHotPlateTemperature(app,MD,hotplateNumber,...
                         temperature,failedCalls);
                 else
@@ -105,16 +105,17 @@ function [success] = setHotPlateTemperature(app,MD,hotplateNumber,...
                 end
             else
                 success = 1;
-                fprintf('HP%d temperature set: %.1f\n',hotplateNumber,temperature);
+                logMessage(app,sprintf('HP%d temperature set: %.1f. Attempts %d',...
+                    hotplateNumber,temperature,(failedCalls+1)));
             end % (isempty(out) || out(3) == 1)
         catch
-            fprintf('Error communicating with hotplate %d\n',hotplateNumber);
+            logMessage(app,sprintf('Error communicating with hotplate %d',hotplateNumber));
             success = 0;
             clear h;
         end % try catch
         % If the hotplate is off send the command again
         if getHotPlateTemperatureStatus(app,hotplateNumber) == 1
-            fprintf("HP%d off, turining it back on...\n",hotplateNumber);
+            logMessage(app,sprintf("HP%d off, turining it back on...",hotplateNumber));
             success = setHotPlateTemperature(app,MD,hotplateNumber,temperature);
         end
         pause(1); % Let temperature stabilize

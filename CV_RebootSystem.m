@@ -28,8 +28,8 @@ function CV_RebootSystem(app,MD)
             WriteDigitalPin(a,'A0',1); % Normally closed position, Keithley connected
             configurePin(a,'A0','unset'); % The pin is no longer reserved and can be automatically set at the next operation.
         catch
-            warndlg(sprintf('Error disconnecting Keithley on arduino %d',...
-                mu),'Arduino error');
+            logMessage(app,sprintf('Error disconnecting Keithley on arduino %d',...
+                mu));
         end
         % Turn the fan off
         arduinoTurnFanOff(app,mu);
