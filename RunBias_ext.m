@@ -5,6 +5,7 @@ PinState=MD(MUnb).PinState;
 setStressT=MD(MUnb).ExpData.Setup.TempH;
 Err=MD(MUnb).MDdata.Err;
 meas_flag=MD(MUnb).MDdata.meas_flag;
+BiasPinState=MD(mu).BiasPinState;
 
 if(IsPreBias) % IF PREBIAS STEP
     for p = 1:length(PinState) %Parse through all  pins
@@ -44,9 +45,12 @@ else % IF REGULAR STRESS STEP
         end
         % Turn on all pins if they have been activated by the user
         for p = 1:length(PinState) % Parse through all  pins
-            if(PinState(p)) % If the pin has been activated by the user
-%                 writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1
-                arduinoTurnPinOn(app,MUnb,ArdPins(p));
+            if(PinState(p) && BiasPinState(p)) % If the pin has been activated by the user (both for CV and for bias)
+                writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1
+                % log bias status here
+                MD(MUnb).ExpData.log.BiasStatus=[MD(MUnb).ExpData.log.BiasStatus, 1];
+            else
+                MD(MUnb).ExpData.log.BiasStatus=[MD(MUnb).ExpData.log.BiasStatus, 0];
             end
         end
         % Record bias starting time
