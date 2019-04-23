@@ -5,7 +5,7 @@ PinState=MD(MUnb).PinState;
 setStressT=MD(MUnb).ExpData.Setup.TempH;
 Err=MD(MUnb).MDdata.Err;
 meas_flag=MD(MUnb).MDdata.meas_flag;
-BiasPinState=MD(mu).BiasPinState;
+BiasPinState=MD(MUnb).BiasPinState;
 
 if(IsPreBias) % IF PREBIAS STEP
     for p = 1:length(PinState) %Parse through all  pins
