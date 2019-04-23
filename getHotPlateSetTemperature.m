@@ -65,11 +65,12 @@ function [setTemperature] = getHotPlateSetTemperature(app,hotplateNumber,...
             setTemperature = val/10;  
             clear h;
         else
-            fprintf("Error reading set temperature of HP%d\n",hotplateNumber);
+            logMessage(app,sprintf("Error reading set temperature of HP%d",...
+                hotplateNumber));
             failedCalls = failedCalls + 1;
             % Retry (unless maximu number of attemps has been reached)
             if failedCalls <= MAX_FAILED_CALLS
-                fprintf("Trying again...\n");
+                logMessage(app,sprintf("Trying again..."));
                 pause(0.1);
                 setTemperature = getHotPlateSetTemperature(h,failedCalls);
             else
@@ -78,15 +79,15 @@ function [setTemperature] = getHotPlateSetTemperature(app,hotplateNumber,...
             end
         end
     catch e
-        fprintf("Error retriving the set temperature on hotplate %d:\n",...
-            hotplateNumber);
+        logMessage(app,sprintf("Error retriving the set temperature on hotplate %d:",...
+            hotplateNumber));
         display(e.message);
         
         failedCalls = failedCalls + 1;
         clear h;
         % Retry (unless maximu number of attemps has been reached)
         if failedCalls <= MAX_FAILED_CALLS
-            fprintf("Trying again...\n");
+            logMessage(app,sprintf("Trying again..."));
             pause(0.1);
             setTemperature = getHotPlateSetTemperature(app,hotplateNumber,...
                 failedCalls);

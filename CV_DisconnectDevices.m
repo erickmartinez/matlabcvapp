@@ -63,7 +63,7 @@ function CV_DisconnectDevices(app)
             delete(instrfind('Name','VISA-GPIB0-17'));
             app.StatusLampImpedance.Color = [0 0 0];
         catch e
-            display(e.message);
+            logMessage(app,e.message);
         end
     else
         for i=1:3

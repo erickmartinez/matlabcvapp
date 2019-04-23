@@ -139,6 +139,10 @@ function  StartProc_ext(app)
                 
 
         for mu=1:3
+            % Save the BiasPinState vector indicating whether the
+            % steady-state bias must be applied to all pins or to pins 5 to
+            % 8 only
+            MD(mu).BiasPinState=app.BiasPinState;
             % Initialize startbias log vector
             MD(mu).ExpData.log.startbiastime = [];
             % Initialize end bias time log vector
@@ -217,6 +221,12 @@ function  StartProc_ext(app)
         fprintf(fileID,datestr(datetime));
 
         fprintf(fileID,'\r\n');
+        
+        if(app.Bias5to8.Value==1)
+            fprintf(fileID,"Steady-State bias applied only to pins 5 to 8 (if active)");
+        else
+            fprintf(fileID,"Steady-state bias applied to all active pins");
+        end
 
         fprintf(fileID,"Sweep Parameters: \n");
         fprintf(fileID,"Frequency: "+app.Frequency_gnl.Value+" "+app.Freq_unit_gnl.Value+"      VAC: "+app.OSC_gnl.Value+" mV"+"\n");
@@ -238,7 +248,7 @@ function  StartProc_ext(app)
         fprintf(fileID,"Measurement name: "+app.DataFileName_MU1.Value);
         fprintf(fileID,"Nitride Thickness: "+app.THK_1.Value+" nm\n");
         fprintf(fileID,"Heating temperature: "+app.TempH_1.Value+" °C\n");
-        fprintf(fileID,"Cooling temperature: "+app.TempH_1.Value+" °C\n");
+        fprintf(fileID,"Cooling temperature: "+app.TempC_1.Value+" °C\n");
         fprintf(fileID,"Time Offset: "+app.TimeOffset_1.Value+" "+app.t_offset_unit_1.Value+"\n");
         fprintf(fileID,"Pre-CV bias Time: "+app.PreBiasTime_1.Value + " min \n");
         fprintf(fileID,"Number of iterations/measurement: "+app.IterM_1.Value+"\n");
@@ -250,7 +260,7 @@ function  StartProc_ext(app)
         fprintf(fileID,"Measurement name: "+app.DataFileName_MU2.Value);
         fprintf(fileID,"Nitride Thickness: "+app.THK_2.Value+" nm\n");
         fprintf(fileID,"Heating temperature: "+app.TempH_2.Value+" °C\n");
-        fprintf(fileID,"Cooling temperature: "+app.TempH_2.Value+" °C\n");
+        fprintf(fileID,"Cooling temperature: "+app.TempC_2.Value+" °C\n");
         fprintf(fileID,"Time Offset: "+app.TimeOffset_2.Value+" "+app.t_offset_unit_2.Value+"\n");
         fprintf(fileID,"Pre-CV bias Time: "+app.PreBiasTime_2.Value + " min \n");
         fprintf(fileID,"Number of iterations/measurement: "+app.IterM_2.Value+"\n");
@@ -262,7 +272,7 @@ function  StartProc_ext(app)
         fprintf(fileID,"Measurement name: "+app.DataFileName_MU3.Value);
         fprintf(fileID,"Nitride Thickness: "+app.THK_3.Value+" nm\n");
         fprintf(fileID,"Heating temperature: "+app.TempH_3.Value+" °C\n");
-        fprintf(fileID,"Cooling temperature: "+app.TempH_3.Value+" °C\n");
+        fprintf(fileID,"Cooling temperature: "+app.TempC_3.Value+" °C\n");
         fprintf(fileID,"Time Offset: "+app.TimeOffset_3.Value+" "+app.t_offset_unit_3.Value+"\n");
         fprintf(fileID,"Pre-CV bias Time: "+app.PreBiasTime_3.Value + " min \n");
         fprintf(fileID,"Number of iterations/measurement: "+app.IterM_3.Value+"\n");
@@ -301,12 +311,14 @@ function  StartProc_ext(app)
             end
 
             % Initialize unit log parameters
+            MD(mu).ExpData.log.BiasStatus=[];
             MD(mu).ExpData.log.Ttime = 0; % set log.Ttime, the log function will log the initialization point as the first value is 0 (needs to be a number as logvalues_ext.m will crash if empty)
             MD(mu).ExpData.log.Itime = 0;
             MD(mu).MDdata.CVStartTime=[];
             % Get initial temperature value
             InitTemp = getTC(app,mu);
             MD(mu).ExpData.log.T = InitTemp;
+            MD(mu).ExpData.Pin(p).IV={}; % Empty struct array to save IV curve data
         end
 
         % Log current and temperature
@@ -333,6 +345,12 @@ function  StartProc_ext(app)
 
 
         tic; %Start recording time during measurement (logvalues_ext)
+        
+        % Take an IV measurement on each pin
+        MD=IVmeas(app,MD);
+        
+        message_IV='Initial IV measurement completed on all pins';
+        logMessage(app,message_IV);
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RUN PROCESS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         CV_timeLoop(app,MD,Prog_CV);
