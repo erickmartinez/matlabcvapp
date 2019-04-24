@@ -42,21 +42,26 @@ if(abs(Temp - CoolT) <= Err && MD(MUnb).MDdata.meas_flag==0 ...
     if(time_inc>=stressBiasTime_sec || MD(MUnb).MDdata.startbiastime(end)==0) % For the first measurement, startbiastime is set to 0 for initialization
         % In case the fan is still on, turn it off
         if(MD(MUnb).MDdata_fanflag==1)
-            writeDigitalPin(Arduino,'A1',0); %Turn off Fan (verify pin number)
+            % writeDigitalPin(Arduino,'A1',0); %Turn off Fan (verify pin number)
+            arduinoTurnFanOff(app,MUnb);
             pause(10); % Pause 10 s to let temperature stabilize after the fan has been turned off
             MD(MUnb).MDdata_fanflag=0; % Set fan flag to 0 after the fan has been turned off
         end
-        writeDigitalPin(Arduino,'A0',0) % Turn on the toggle switch board (NEEDS TO BE AT LOW POTENTIAL TO BE ON), ie connect to the impedance analyzer
+        logMessage(app,sprintf("Ready to measure unit %d.",MUnb));
+        % writeDigitalPin(Arduino,'A0',0) % Turn on the toggle switch board (NEEDS TO BE AT LOW POTENTIAL TO BE ON), ie connect to the impedance analyzer
+        arduinoDisconnectKeithley(app,MUnb);
         % Run the CV measurement (will measure all pins that were selected by the user)
         LampSet=[];LampColor=[]; % lamp colors not updated at that point
         MD = RunIterCV(app,CVProgram,LampSet,LampColor,MUnb,MD); %Take iterative CV measurement
         % Start ramping up HP temperature after measurement and set meas_flag to 1 (cut and copy code from RunIterCV here)
         % After the measurement, all pins of the hotplate should be off. Then toggle relay to Keithley (to allow LCR measurements of another hotplate)
         
-        writeDigitalPin(Arduino,'A0',1) % Turn off the toggle switch board (NEEDS TO BE AT HIGH POTENTIAL TO BE ON), ie connect to the Keithley
+        % writeDigitalPin(Arduino,'A0',1) % Turn off the toggle switch board (NEEDS TO BE AT HIGH POTENTIAL TO BE ON), ie connect to the Keithley
+        arduinoConnectKeithley(app,MUnb);
         % Start ramping temperature of the hotplate to the stress temperature
         setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH); %Turn off desired hotplate
-        setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH); %Turn on heating & set to stress temperature of desired hotplate
+        logMessage(app,sprintf("Ramping temperature on unit %d.", MUnb));
+        % setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH); %Turn on heating & set to stress temperature of desired hotplate
         MD(MUnb).MDdata.meas_flag=1; % Set flag to 1 after measurement completed
         MD(MUnb).MDdata.stress_completed_flag=0; % Set stress completed flag to 0 as the new stress cycle has not been completed 
     end

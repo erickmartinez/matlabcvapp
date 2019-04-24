@@ -25,7 +25,7 @@ function CV_RebootSystem(app,MD)
         % Return all Keithley/Impedance analyzer relay switches to the
         % normal position
         try
-            WriteDigitalPin(a,'A0',1); % Normally closed position, Keithley connected
+            % WriteDigitalPin(a,'A0',1); % Normally closed position, Keithley connected
             configurePin(a,'A0','unset'); % The pin is no longer reserved and can be automatically set at the next operation.
         catch
             logMessage(app,sprintf('Error disconnecting Keithley on arduino %d',...

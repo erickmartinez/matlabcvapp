@@ -13,7 +13,7 @@ function arduinoDisconnectKeithley(app,arduino_number)
     try
         WriteDigitalPin(a,'A0',0); % Normally closed position, Keithley connected
     catch
-        logMessage(app,sprintf('Error disconnecting Keithley on arduino %d',...
+        logMessage(app,sprintf('Error disconnecting Keithley on unit %d.',...
             arduino_number));
     end
     clear a;

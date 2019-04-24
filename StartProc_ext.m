@@ -8,9 +8,10 @@ function  StartProc_ext(app)
 % Starts the measurement
     if app.idleFlag == 1 && app.devicesConnected == 1
 
-        disp('Process started');
-        disp(app.P5_2.Value);
-        disp(app.P5_3.Value);
+        logMessage(app,'***** Process started *****');
+        app.idleFlag = 0;
+        % disp(app.P5_2.Value); <--- What's the purpose of this?
+        % disp(app.P5_3.Value); <--- What's the purpose of this?
 
         %Turns off holds for/reset all plots in app
         % Unit 1
@@ -359,7 +360,7 @@ function  StartProc_ext(app)
         %                 %After completed meaurement
         %                 save(fileDest+"\"+app.DataFileName.Value+".mat"); %Save all workspace data
     else % else for if app.idleFlag == 1
-        warndlg('Another process is currently running','System error');
+        warndlg('Another process is currently running or instruments are disconnected','System error');
     end % end for if app.idleFlag == 1
 end
 

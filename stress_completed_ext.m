@@ -15,7 +15,8 @@ time_inc=toc-MD(MUnb).MDdata.startbiastime(end); % current time minus last recor
 Temp=getTC(app,MUnb);
 if(time_inc>=biastime_sec && Temp<=StressT+Err && Temp>= StressT-Err && MD(MUnb).MDdata.bias_on_flag) % Allow error of +/- 3 °C in temperature. Temperature condition to avoid turning on the fan if ramping has already started or if room T has been reached  NOTE: temperature check here not necessary, might prevent running this code if temperature is out of range for some reason
     if(getTC(app,MUnb)>=CoolT+Err) % if T is larger than cool T, the fan will be turned on
-        writeDigitalPin(Arduino,'A1',1); %Turn on Fan if current T is different from cooling T, ie case where stressing and cooling T identical (verify pin number).
+        %writeDigitalPin(Arduino,'A1',1); %Turn on Fan if current T is different from cooling T, ie case where stressing and cooling T identical (verify pin number).
+        arduinoTurnFanOn(app,MUnb);
         MD(MUnb).MDdata_fanflag=1; % Set fan flag to 1 after the fan has been turned on
     end
     message_endstress=sprintf('Stopping bias and cooling HP on unit %d', MUnb);
@@ -26,7 +27,8 @@ if(time_inc>=biastime_sec && Temp<=StressT+Err && Temp>= StressT-Err && MD(MUnb)
 %     setHotPlateTemperature(app, MD, MUnb, MD(MUnb).ExpData.Setup.CalTempC); 
     % stop bias (8 POGO pins)
     for p = 1:length(PinState) %Parse through all  pins
-        writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0); %Set all available pins to 0 or off
+        % writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0); %Set all available pins to 0 or off
+        arduinoTurnPinOff(app,MUnb,ArdPins(p));
     end
 	% Log the time at which the stress bias was completed
 	timeCompleted = toc;

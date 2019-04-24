@@ -15,7 +15,7 @@ function arduinoTurnFanOff(app,MUNumber)
     try
         WriteDigitalPin(a,'A1',0);
     catch
-        logMessage(app,sprintf('Error turning the fan off for arduino %d',...
+        logMessage(app,sprintf('Error turning the fan off on unit %d.',...
             MUNumber));
     end
     clear a;

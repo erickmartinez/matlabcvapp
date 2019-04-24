@@ -14,7 +14,8 @@ if(IsPreBias) % IF PREBIAS STEP
     writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(PreBiasPin))),1); %Set PreBias pin to 1 or on
     % Bias for the prebias time
     PreBiasTime=MD(MUnb).ExpData.Setup.PreBiasTime;
-    writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Normally closed position, Keithley connected and biasing the pin which is on
+    % writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Normally closed position, Keithley connected and biasing the pin which is on
+    arduinoConnectKeithley(app,MUnb);
     biasstart=toc;
     while(toc-biasstart<PreBiasTime)
         pause(0.5);        
@@ -46,7 +47,8 @@ else % IF REGULAR STRESS STEP
         % Turn on all pins if they have been activated by the user
         for p = 1:length(PinState) % Parse through all  pins
             if(PinState(p) && BiasPinState(p)) % If the pin has been activated by the user (both for CV and for bias)
-                writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1
+                % writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1
+                arduinoTurnPinOn(app,MUnb,ArdPins(p));
                 % log bias status here
                 MD(MUnb).ExpData.log.BiasStatus=[MD(MUnb).ExpData.log.BiasStatus, 1];
                 mess_bias=sprintf("Running bias on unit %d pin %d",MUnb,p);
@@ -67,4 +69,4 @@ else % IF REGULAR STRESS STEP
     end
 end
 
-% End of RunBias function
+end % End of RunBias function
