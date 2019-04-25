@@ -47,7 +47,7 @@ try
     plot(MD(2).ExpData.Pin(4).IV(:,1),MD(2).ExpData.Pin(4).IV(:,2));
     title('Unit 2, pin 4');
 catch e
-    logMessage(app,sprintf("Error plotting IV on unit 2 pin 4:\n%s",e.message);
+    logMessage(app,sprintf("Error plotting IV on unit 2 pin 4:\n%s",e.message));
 end
 
 fprintf(app.HW(1).KEITH, ":SOUR:VOLT "+MD(1).ExpData.Setup.stressBiasValue); %Source Bias Voltage
