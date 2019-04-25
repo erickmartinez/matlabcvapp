@@ -25,7 +25,7 @@ function ExportAllIVsTPlots_ext(app)
         end
     end % ends for k=1:3
     hold off
-    title
+    title("I vs time");
     xlabelStr = sprintf("Time (%s)",timeUnit);
     xlabel(xlabelStr);
     ylabel("I (A)");

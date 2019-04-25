@@ -23,6 +23,13 @@ function CV_DisconnectDevices(app)
                 waitbar((2*i-1)/8,wb,message1);
                 
                 % Disconnect the hot plates
+                if isfield(app.HW(i),'HP')
+                    isHPOn = getHotPlateTemperatureStatus(app,i);
+                    if isHPOn == 0 % 0 equals 'open' (heating)
+                        setHotPlateTemperature(app,i,25);
+                    end
+                end
+                    
                 COM_HP = ['COM',num2str(HP_COM_table(i))];
                 CloseHP_ext(app, HW, i, COM_HP);
                 turnHPLampOnOff(app,i,0);

@@ -12,7 +12,7 @@ function arduinoTurnFanOn(app,MUNumber)
     % Get the handle to the corresponding arduino:
     a=app.HW(MUNumber).Arduino;
     try
-        WriteDigitalPin(a,'A1',1);
+        writeDigitalPin(a,'A1',1);
     catch
         logMessage(app,sprintf('Error turning the fan on on unit %d.',...
             MUNumber));

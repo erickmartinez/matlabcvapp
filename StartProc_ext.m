@@ -290,7 +290,7 @@ function  StartProc_ext(app)
             MD(mu).ExpData.Setup.CalTempH = CorrectT(app,MD(mu).ExpData.Setup.TempH,mu); %Set Hotplate Set Stress Temp Based on Hotplate Thermocouple Calibration (C). MD(mu).ExpData.Setup.TempH is the user-defined temp
             MD(mu).ExpData.Setup.CalTempC = CorrectT(app,MD(mu).ExpData.Setup.TempC,mu); %Set Hotplate Set Cool Temp Based on Hotplate Thermocouple Calibration (C)
 
-            setHotPlateTemperature(app,MD,mu,MD(mu).ExpData.Setup.CalTempC); % Execute Function to Set Hotplate Temperaure
+            setHotPlateTemperature(app,mu,MD(mu).ExpData.Setup.CalTempC); % Execute Function to Set Hotplate Temperaure
 
             if(getTC(app,mu) > MD(mu).ExpData.Setup.TempC) %If Thermocouple temperature is greater than the cool/measurement temperature
                 writeDigitalPin(app.HW(mu).Arduino,'A1',1) %Turn on Fan

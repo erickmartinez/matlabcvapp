@@ -98,7 +98,7 @@ for p = 1:length(PinState) %For each pin
         % If stopFlag is set to 1, disconnect all POGO pins, disconnect Impedance
         % Analyzer, turn off all the hotplates, turn off the fans, and delete
         % visa objects
-        CV_RebootSystem(app);
+        CV_RebootSystem(MD,app);
     end
 end
 

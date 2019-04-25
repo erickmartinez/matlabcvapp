@@ -11,7 +11,7 @@ function arduinoDisconnectKeithley(app,arduino_number)
     % Get the handle to the corresponding arduino:
     a=app.HW(arduino_number).Arduino;
     try
-        WriteDigitalPin(a,'A0',0); % Normally closed position, Keithley connected
+        writeDigitalPin(a,'A0',0); % Normally closed position, Keithley connected
     catch
         logMessage(app,sprintf('Error disconnecting Keithley on unit %d.',...
             arduino_number));

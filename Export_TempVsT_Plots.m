@@ -66,7 +66,7 @@ end
         end
     end % ends for k=1:3
     hold off
-    title
+    title("Temperature vs Time");
     xlabelStr = sprintf("Time (%s)",timeUnit);
     xlabel(xlabelStr);
     ylabel("Temp (°C)");

@@ -5,7 +5,7 @@ PinState=MD(MUnb).PinState;
 setStressT=MD(MUnb).ExpData.Setup.TempH;
 Err=MD(MUnb).MDdata.Err;
 meas_flag=MD(MUnb).MDdata.meas_flag;
-BiasPinState=MD(MUnb).BiasPinState;
+BiasPinState=app.BiasPinState;
 
 if(IsPreBias) % IF PREBIAS STEP
     for p = 1:length(PinState) %Parse through all  pins
@@ -25,7 +25,7 @@ if(IsPreBias) % IF PREBIAS STEP
 else % IF REGULAR STRESS STEP
     Temp=getTC(app,MUnb);
 	% If the measurement temperature is reached and the measurement flag is 1 (measurement already performed)
-    if(Temp<=setStressT+Err && Temp>=setStressT-Err && meas_flag==1) 
+    if(Temp<=setStressT+Err && Temp>=setStressT-Err && meas_flag==1 && MD(MUnb).MDdata.finish_flag ~= 1) 
         message_bias=['Starting bias in Runbias_ext on MU ',num2str(MUnb)];
         logMessage(app,message_bias);
         

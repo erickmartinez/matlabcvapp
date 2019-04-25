@@ -23,8 +23,7 @@ if(time_inc>=biastime_sec && Temp<=StressT+Err && Temp>= StressT-Err && MD(MUnb)
     logMessage(app,message_endstress);
     MD(MUnb).MDdata.stress_completed_flag=1; % Set stress completed flag to 1
     % Stop hotplate
-    setHotPlateTemperature(app, MD, MUnb, MD(MUnb).ExpData.Setup.CalTempC); % Set hotplate temperature to the cool temperature, corrected using the calibration curve
-%     setHotPlateTemperature(app, MD, MUnb, MD(MUnb).ExpData.Setup.CalTempC); 
+    setHotPlateTemperature(app, MUnb, MD(MUnb).ExpData.Setup.CalTempC); % Set hotplate temperature to the cool temperature, corrected using the calibration curve
     % stop bias (8 POGO pins)
     for p = 1:length(PinState) %Parse through all  pins
         % writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0); %Set all available pins to 0 or off

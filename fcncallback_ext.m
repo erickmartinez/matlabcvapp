@@ -52,16 +52,16 @@ if(abs(Temp - CoolT) <= Err && MD(MUnb).MDdata.meas_flag==0 ...
         arduinoDisconnectKeithley(app,MUnb);
         % Run the CV measurement (will measure all pins that were selected by the user)
         LampSet=[];LampColor=[]; % lamp colors not updated at that point
-        MD = RunIterCV(app,CVProgram,LampSet,LampColor,MUnb,MD); %Take iterative CV measurement
+        MD = RunIterCV_ext(app,CVProgram,LampSet,LampColor,MUnb,MD); %Take iterative CV measurement
         % Start ramping up HP temperature after measurement and set meas_flag to 1 (cut and copy code from RunIterCV here)
         % After the measurement, all pins of the hotplate should be off. Then toggle relay to Keithley (to allow LCR measurements of another hotplate)
         
         % writeDigitalPin(Arduino,'A0',1) % Turn off the toggle switch board (NEEDS TO BE AT HIGH POTENTIAL TO BE ON), ie connect to the Keithley
         arduinoConnectKeithley(app,MUnb);
         % Start ramping temperature of the hotplate to the stress temperature
-        setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH); %Turn off desired hotplate
+        setHotPlateTemperature(app,MUnb,MD(MUnb).ExpData.Setup.CalTempH); %Turn off desired hotplate
         logMessage(app,sprintf("Ramping temperature on unit %d.", MUnb));
-        % setHotPlateTemperature(app,MD,MUnb,MD(MUnb).ExpData.Setup.CalTempH); %Turn on heating & set to stress temperature of desired hotplate
+        % setHotPlateTemperature(app,MUnb,MD(MUnb).ExpData.Setup.CalTempH); %Turn on heating & set to stress temperature of desired hotplate
         MD(MUnb).MDdata.meas_flag=1; % Set flag to 1 after measurement completed
         MD(MUnb).MDdata.stress_completed_flag=0; % Set stress completed flag to 0 as the new stress cycle has not been completed 
     end

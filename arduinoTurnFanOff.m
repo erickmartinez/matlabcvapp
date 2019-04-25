@@ -1,4 +1,4 @@
-function arduinoTurnFanOff(app,MUNumber)
+function arduinoTurnFanOff(app,MUnb)
 % arduinoTurnFanOff
 % Turns the fan off for the selected measurement unit
 %
@@ -11,12 +11,12 @@ function arduinoTurnFanOff(app,MUNumber)
 
 
     % Get the handle to the corresponding arduino:
-    a = app.HW(MUNumber).Arduino;
+    a = app.HW(MUnb).Arduino;
     try
-        WriteDigitalPin(a,'A1',0);
-    catch
-        logMessage(app,sprintf('Error turning the fan off on unit %d.',...
-            MUNumber));
+        writeDigitalPin(a,'A1',0);
+    catch e
+        logMessage(app,sprintf('Error turning the fan off on unit %d:\n%s',...
+            MUnb,e.message));
     end
     clear a;
 end
