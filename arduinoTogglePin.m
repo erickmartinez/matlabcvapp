@@ -22,5 +22,6 @@ function arduinoTogglePin(app,arduinoNumber,pinNumber,value)
                     arduinoNumber,pinNumber));
     end
     clear a;
+    pause(1);
 end
 

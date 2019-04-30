@@ -51,6 +51,7 @@ function [status] = getHotPlateTemperatureStatus(app,hotplateNumber,...
             fwrite(h,q(i),'uint8'); %Write to hotplate
             pause(.05);
         end
+        pause(0.1);
         out = fread(h,11); %Read out hotplate response
         flushoutput(h); % removes data from the output buffer
         flushinput(h); % removes data from the input buffer associated with obj.
