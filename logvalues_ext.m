@@ -92,6 +92,8 @@ function MD=logvalues_ext(app, MD, MUnb)
             % Plot
             plot(Itpanel,MD(MUnb).ExpData.log.Itime/3600,MD(MUnb).ExpData.log.I,...
                 'ko-','LineWidth',2);
+            plot(Tpanel,MD(MUnb).ExpData.log.Ttime(end)/3600,MD(MUnb).ExpData.log.T(end),...
+                'o-','LineWidth',2);
             drawnow;
             % Log Keithley bias based on the state of the relays? 
             % (At the same time as the current)
