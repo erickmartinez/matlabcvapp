@@ -1,10 +1,18 @@
 function MD=IVmeas(app,MD)
 % Function called to measure an IV curve on each device
+% Parameters
+% ----------
+% app : obj
+%   A handle to the app designer GUI instance
+% MD : struct
+%   A data structure containing the measurements 
 
 for mu=1:3
     for p=1:length(MD(mu).PinState)
         if(MD(mu).PinState(p))
-            writeDigitalPin(app.HW(mu).Arduino,char("D"+num2str(MD(mu).ArdP(p))),1); %Turn on desired pogo-pin
+            logMessage(app,sprintf("Running I-V on unit %d, pin %d",mu,p));
+            % writeDigitalPin(app.HW(mu).Arduino,char("D"+num2str(MD(mu).ArdP(p))),1); %Turn on desired pogo-pin
+            arduinoTurnPinOn(app,mu,MD(mu).ArdP(p));
             Vmax=MD(1).ExpData.Setup.stressBiasValue;
             V_IV=-Vmax:0.1:Vmax; % Voltage values
             
@@ -21,16 +29,25 @@ for mu=1:3
             end
             
             MD(mu).ExpData.Pin(p).IV=[MD(mu).ExpData.Pin(p).IV, IVcurve]; % IVmeas return an array containing voltage in col 1 and current in col 2
-            writeDigitalPin(app.HW(mu).Arduino,char("D"+num2str(MD(mu).ArdP(p))),0); %Turn off desired pogo-pin
+            % writeDigitalPin(app.HW(mu).Arduino,char("D"+num2str(MD(mu).ArdP(p))),0); %Turn off desired pogo-pin
+            arduinoTurnPinOff(app,mu,MD(mu).ArdP(p));
         end
     end
 end
 
 figure
-plot(MD(1).ExpData.Pin(4).IV(:,1),MD(1).ExpData.Pin(4).IV(:,2));
-title('Unit 1, pin 4');
+try
+    plot(MD(1).ExpData.Pin(4).IV(:,1),MD(1).ExpData.Pin(4).IV(:,2));
+    title('Unit 1, pin 4');
+catch e
+    logMessage(app,sprintf("Error plotting IV on unit 1 pin 4:\n%s",e.message));
+end
 figure
-plot(MD(2).ExpData.Pin(4).IV(:,1),MD(2).ExpData.Pin(4).IV(:,2));
-title('Unit 2, pin 4');
+try
+    plot(MD(2).ExpData.Pin(4).IV(:,1),MD(2).ExpData.Pin(4).IV(:,2));
+    title('Unit 2, pin 4');
+catch e
+    logMessage(app,sprintf("Error plotting IV on unit 2 pin 4:\n%s",e.message));
+end
 
 fprintf(app.HW(1).KEITH, ":SOUR:VOLT "+MD(1).ExpData.Setup.stressBiasValue); %Source Bias Voltage

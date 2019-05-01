@@ -36,22 +36,24 @@ PreBiasTime=MD(MUnb).ExpData.Setup.PreBiasTime;
 IterM = MD(MUnb).ExpData.Setup.IterM ; %Amount of repeated measurements per stress iteration
 
 disp_info_mes=['Starting execution of RunIterCV on hotplate number ',num2str(MUnb),'.'];
-disp(disp_info_mes);
+logMessage(app,disp_info_mes);
 disp_cycles=['Current cycle count number: ',num2str(MD(MUnb).MDdata.cycle_counter),'. Total number: ',num2str(app.Iter_tot_gnl.Value)];
-disp(disp_cycles);
+logMessage(app,disp_cycles);
 % if(Pinstate) % Add condition if Pinstate is not all 0, as not needed to
 % go over all pin if they should not be measured
 for p = 1:length(PinState) %For each pin
     if(app.stopFlag == 0) % If app not required to stop
         for j = 1:IterM %For each repeated measurement
             if(PinState(p)) %If pin is available
-                writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0) %Turn off desired pogo-pin
+                arduinoTurnPinOff(app,MUnb,ArdPins(p));
+                %writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0) %Turn off desired pogo-pin
                 if(PreBiasTime ~= 0) %If there is a prebias
                     % TO DO: Modify RunBias function
                     MD = RunBias_ext(app, MD, MUnb, 1, p); %Run prebias on pin
                 end
                 %                     writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Connect impedance analyzer and disconnect Keithley
-                writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); %Turn on desired pogo-pin
+                % writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); %Turn on desired pogo-pin
+                arduinoTurnPinOn(app,MUnb,ArdPins(p));
                 % LampSet(p) = LampColor(p); %Turn on pin lamp
 				% Log the elapsed time (since the begining of the experiment) when the
 				% CV starts being collected in the pin p.
@@ -90,12 +92,13 @@ for p = 1:length(PinState) %For each pin
                 MD=logvalues_ext(app, MD, k);
             end
         end
-        writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0) %Turn off desired pogo-pin after it has been measured
+        % writeDigitalPin(Arduino,char("D"+num2str(ArdPins(p))),0) %Turn off desired pogo-pin after it has been measured
+        arduinoTurnPinOff(app,MUnb,ArdPins(p));
     else
         % If stopFlag is set to 1, disconnect all POGO pins, disconnect Impedance
         % Analyzer, turn off all the hotplates, turn off the fans, and delete
         % visa objects
-        CV_RebootSystem(app);
+        CV_RebootSystem(MD,app);
     end
 end
 

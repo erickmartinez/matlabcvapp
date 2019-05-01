@@ -38,20 +38,26 @@ function CV_timeLoop(app,MD,CVProgram)
     %% Save measuremement and log data of current unit and log data of other units
     saveMDdata(app,MD);
     
-    
-    % Export all CV plots
-    Export_CV_Plots(app,MD);
-    % Export all VFB plots
-    Export_VFBtime_Plots(app,MD);
-    % Export all I vs T plots
-    Export_IVsT_Plots(app,MD);
-    % Export all Temp vs T plots
-    Export_TempVsT_Plots(app,MD);
+    try
+        % Export all CV plots
+        Export_CV_Plots(app,MD);
+        % Export all VFB plots
+        Export_VFBtime_Plots(app,MD);
+        % Export all I vs T plots
+        Export_IVsT_Plots(app,MD);
+        % Export all Temp vs T plots
+        Export_TempVsT_Plots(app,MD);
+    catch exception
+        msgText = getReport(exception);
+        logMessage(app,"Error plotting graphs:\n%s",msgText);
+    end
     
     % When finished, disconnect all POGO pins, disconnect Impedance
     % Analyzer, turn off all the hotplates, turn off the fans, and delete
-    % gpib objects
-    CV_RebootSystem(app,MD);
+    % gpib objects (might have called reboot in RunIterCV
+    if app.devicesConnected == 0
+        CV_RebootSystem(app,MD);
+    end
     app.stopFlag = 0;
     app.idleFlag = 1;
 end

@@ -19,7 +19,7 @@ function CloseHP_ext(app, HW, MUnb, COM) %Function to Close/Clear Hotplate Seria
             % clear(HW(MUnb).HP); <-- Already deleted
             delete(instrfind('Port',COM)) %Delete connection to communication port
         catch e
-            disp(e.message);
+            log(app,e.message);
         end
     end
 end

@@ -67,7 +67,7 @@ function MD=logvalues_ext(app, MD, MUnb)
 
     clear TempTC
     % If stressing is ongoing
-    if(meas_flag==0 && toc-MD(MUnb).ExpData.log.Itime(end) < stressBiasTime) 
+    if(meas_flag==0 && toc-MD(MUnb).ExpData.log.Itime(end) < stressBiasTime) %% Seems to undersample the hotplates not currently running RunBias
         % If the time elapsed since the last log is larger than the log time interval
         if(toc-MD(MUnb).ExpData.log.Itime(end)>=stressbiasstep) 
             % Log temperature
@@ -92,6 +92,9 @@ function MD=logvalues_ext(app, MD, MUnb)
             % Plot
             plot(Itpanel,MD(MUnb).ExpData.log.Itime/3600,MD(MUnb).ExpData.log.I,...
                 'ko-','LineWidth',2);
+            plot(Tpanel,MD(MUnb).ExpData.log.Ttime(end)/3600,MD(MUnb).ExpData.log.T(end),...
+                'o-','LineWidth',2);
+            drawnow;
             % Log Keithley bias based on the state of the relays? 
             % (At the same time as the current)
         end % if(toc-MD(MUnb).ExpData.log.Itime(end)>=stressbiasstep) 

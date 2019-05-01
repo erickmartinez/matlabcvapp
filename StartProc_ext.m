@@ -8,9 +8,10 @@ function  StartProc_ext(app)
 % Starts the measurement
     if app.idleFlag == 1 && app.devicesConnected == 1
 
-        disp('Process started');
-        disp(app.P5_2.Value);
-        disp(app.P5_3.Value);
+        logMessage(app,'***** Process started *****');
+        app.idleFlag = 0;
+        % disp(app.P5_2.Value); <--- What's the purpose of this?
+        % disp(app.P5_3.Value); <--- What's the purpose of this?
 
         %Turns off holds for/reset all plots in app
         % Unit 1
@@ -289,7 +290,7 @@ function  StartProc_ext(app)
             MD(mu).ExpData.Setup.CalTempH = CorrectT(app,MD(mu).ExpData.Setup.TempH,mu); %Set Hotplate Set Stress Temp Based on Hotplate Thermocouple Calibration (C). MD(mu).ExpData.Setup.TempH is the user-defined temp
             MD(mu).ExpData.Setup.CalTempC = CorrectT(app,MD(mu).ExpData.Setup.TempC,mu); %Set Hotplate Set Cool Temp Based on Hotplate Thermocouple Calibration (C)
 
-            setHotPlateTemperature(app,MD,mu,MD(mu).ExpData.Setup.CalTempC); % Execute Function to Set Hotplate Temperaure
+            setHotPlateTemperature(app,mu,MD(mu).ExpData.Setup.CalTempC); % Execute Function to Set Hotplate Temperaure
 
             if(getTC(app,mu) > MD(mu).ExpData.Setup.TempC) %If Thermocouple temperature is greater than the cool/measurement temperature
                 writeDigitalPin(app.HW(mu).Arduino,'A1',1) %Turn on Fan
@@ -359,7 +360,7 @@ function  StartProc_ext(app)
         %                 %After completed meaurement
         %                 save(fileDest+"\"+app.DataFileName.Value+".mat"); %Save all workspace data
     else % else for if app.idleFlag == 1
-        warndlg('Another process is currently running','System error');
+        warndlg('Another process is currently running or instruments are disconnected','System error');
     end % end for if app.idleFlag == 1
 end
 

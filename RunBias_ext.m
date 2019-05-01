@@ -5,7 +5,7 @@ PinState=MD(MUnb).PinState;
 setStressT=MD(MUnb).ExpData.Setup.TempH;
 Err=MD(MUnb).MDdata.Err;
 meas_flag=MD(MUnb).MDdata.meas_flag;
-BiasPinState=MD(MUnb).BiasPinState;
+BiasPinState=app.BiasPinState;
 
 if(IsPreBias) % IF PREBIAS STEP
     for p = 1:length(PinState) %Parse through all  pins
@@ -14,7 +14,8 @@ if(IsPreBias) % IF PREBIAS STEP
     writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(PreBiasPin))),1); %Set PreBias pin to 1 or on
     % Bias for the prebias time
     PreBiasTime=MD(MUnb).ExpData.Setup.PreBiasTime;
-    writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Normally closed position, Keithley connected and biasing the pin which is on
+    % writeDigitalPin(app.HW(MUnb).Arduino,'A0',1); % Normally closed position, Keithley connected and biasing the pin which is on
+    arduinoConnectKeithley(app,MUnb);
     biasstart=toc;
     while(toc-biasstart<PreBiasTime)
         pause(0.5);        
@@ -24,7 +25,7 @@ if(IsPreBias) % IF PREBIAS STEP
 else % IF REGULAR STRESS STEP
     Temp=getTC(app,MUnb);
 	% If the measurement temperature is reached and the measurement flag is 1 (measurement already performed)
-    if(Temp<=setStressT+Err && Temp>=setStressT-Err && meas_flag==1) 
+    if(Temp<=setStressT+Err && Temp>=setStressT-Err && meas_flag==1 && MD(MUnb).MDdata.finish_flag ~= 1) 
         message_bias=['Starting bias in Runbias_ext on MU ',num2str(MUnb)];
         logMessage(app,message_bias);
         
@@ -46,7 +47,8 @@ else % IF REGULAR STRESS STEP
         % Turn on all pins if they have been activated by the user
         for p = 1:length(PinState) % Parse through all  pins
             if(PinState(p) && BiasPinState(p)) % If the pin has been activated by the user (both for CV and for bias)
-                writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1
+                % writeDigitalPin(app.HW(MUnb).Arduino,char("D"+num2str(ArdPins(p))),1); % Set the pin to 1
+                arduinoTurnPinOn(app,MUnb,ArdPins(p));
                 % log bias status here
                 MD(MUnb).ExpData.log.BiasStatus=[MD(MUnb).ExpData.log.BiasStatus, 1];
                 mess_bias=sprintf("Running bias on unit %d pin %d",MUnb,p);
@@ -67,4 +69,4 @@ else % IF REGULAR STRESS STEP
     end
 end
 
-% End of RunBias function
+end % End of RunBias function

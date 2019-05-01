@@ -2,9 +2,9 @@
 % Script used to take CV measurement on hotplate 3 to test the capacitors
 
 instrreset
-% com='COM6'; % Arduino 3
+com='COM6'; % Arduino 3
 % com='COM7'; % Arduino 2
-com='COM8'; % Arduino 1
+% com='COM8'; % Arduino 1
 % ArdP=linspace(2,9,8); % Contains the Arduino pin numbers corresponding to each POGO pin
 ArdP=[2,3,4,5,6,7,8,9];
 % ArdP=7;
@@ -50,6 +50,7 @@ writeDigitalPin(Arduino,'A0',0);
 
 % Measure CV for each pin
 % figure
+figure
 for p=1:length(ArdP)
     writeDigitalPin(Arduino,char("D"+num2str(ArdP(p))),1); %Turn on desired pogo-pin
     [Cmeas, Rmeas, Vmeas] = RunProgCV_interface(IMPA, Prog_CV); %Run CV measurement

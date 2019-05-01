@@ -51,9 +51,14 @@ for j = 1:m*IterM % Parse through all CV data for pin
     MD(MUnb).ExpData.Pin(p).Vfb = [MD(MUnb).ExpData.Pin(p).Vfb VExtract(maxInd2)]; %Define flatband as voltage as that peak
     Vfb = MD(MUnb).ExpData.Pin(p).Vfb; %Save Vfb variable
     
-    plot(PlotCVby2_p,Vicut(minInd1:end-2),d2Cby2(minInd1:end),'LineWidth',2); %Plot non-noisy 2nd derivative 1/C^2 data
-    plot(PlotCVby2_p,Vfb(end),maxd2Cby2,'k*','LineWidth',1); %Show fitted flatband peak in plot
-    ylim([-inf,0]) %Assuming Vfb is below zero, limit yscale for plot from -infinity to 0
+    try
+        plot(PlotCVby2_p,Vicut(minInd1:end-2),d2Cby2(minInd1:end),'LineWidth',2); %Plot non-noisy 2nd derivative 1/C^2 data
+        plot(PlotCVby2_p,Vfb(end),maxd2Cby2,'k*','LineWidth',1); %Show fitted flatband peak in plot
+        ylim([-inf,0]) %Assuming Vfb is below zero, limit yscale for plot from -infinity to 0
+    catch e
+        msg = sprintf('Error plotting in VFBfitNDeriv:\n%s',e.message);
+        logMessage(app,msg);
+    end
 end
 hold(PlotCVby2_p, 'off')
 
