@@ -1,0 +1,14 @@
+Parameter File:
+
+Sweep Parameters: 
+Frequency: 1 MHz      VAC: 100 mV
+Negative Voltage: -7 V       Positive Voltage: 7 V 
+Voltage Step: 100 mV         Averages per Point: 32
+Integration Time: 5 ms         Sweep Direction: Down
+
+Experiment Parameters: 
+Time Increment: 4 hrs       Time Offset: 0 sec
+Total # Iterations: 40       # Iterations/Measure: 1
+Pre-CV Bias: 0V       Pre-CV Bias Time: 0 min 
+Temperature: 70 C       Stress Voltage: 7.696 V 
+Nitride Thickness: 76.96 nm
