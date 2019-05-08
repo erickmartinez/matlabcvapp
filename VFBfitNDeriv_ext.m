@@ -1,11 +1,11 @@
 % function VFBfitNDeriv(app,p,m,IterM,PlotCVby2_p)
-function MD=VFBfitNDeriv_ext(app, p, m, MD, MUnb)
+function MD=VFBfitNDeriv_ext(app, p, m, MD, MD_plot, MUnb)
 % The function calculates Vfb based on the CV measurement data
 % (recalculates all previous values too)
 
 stressbiastime=MD(MUnb).ExpData.Setup.biastime_sec;
 
-PlotCVby2_p = MD(MUnb).Plots.CVby2(p); % PlotCVby2_p is the handle to the derivative plot corresponding to pin p
+PlotCVby2_p = MD_plot(MUnb).Plots.CVby2(p); % PlotCVby2_p is the handle to the derivative plot corresponding to pin p
 IterM = MD(MUnb).ExpData.Setup.IterM; % Number of repeats for each measurement
 
 Cs = MD(MUnb).ExpData.Pin(p).C; % C in struct for pin p

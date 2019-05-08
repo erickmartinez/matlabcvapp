@@ -1,4 +1,4 @@
-function CV_timeLoop(app,MD,CVProgram)
+function CV_timeLoop(app,MD,MD_plot,CVProgram)
 % CV_timeLoop(app,MD)
 % A loop with a time counter to run the code every dt seconds
 % 
@@ -25,7 +25,7 @@ function CV_timeLoop(app,MD,CVProgram)
     while app.stopFlag ~= 1
         if round(rem(toc,dt)) == 0
             for mu=1:length(measurementUnits)
-                MD = fcncallback_ext(app,mu,MD,CVProgram);
+                MD = fcncallback_ext(app,mu,MD,MD_plot,CVProgram);
             end
             % If all the measurements are completed leave the while loop
             if(MD(1).MDdata.finish_flag == 1 && MD(2).MDdata.finish_flag == 1 ...

@@ -1,4 +1,4 @@
-function MD=fcncallback_ext(app,MUnb,MD,CVProgram)
+function MD=fcncallback_ext(app,MUnb,MD,MD_plot,CVProgram)
 % Callback function to be executed every x seconds and run each sequence of
 % the measurement on all hotplates
 % Arguments:
@@ -52,7 +52,7 @@ if(abs(Temp - CoolT) <= Err && MD(MUnb).MDdata.meas_flag==0 ...
         arduinoDisconnectKeithley(app,MUnb);
         % Run the CV measurement (will measure all pins that were selected by the user)
         LampSet=[];LampColor=[]; % lamp colors not updated at that point
-        MD = RunIterCV_ext(app,CVProgram,LampSet,LampColor,MUnb,MD); %Take iterative CV measurement
+        MD = RunIterCV_ext(app,CVProgram,LampSet,LampColor,MUnb,MD,MD_plot); %Take iterative CV measurement
         % Start ramping up HP temperature after measurement and set meas_flag to 1 (cut and copy code from RunIterCV here)
         % After the measurement, all pins of the hotplate should be off. Then toggle relay to Keithley (to allow LCR measurements of another hotplate)
         

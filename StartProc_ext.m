@@ -121,13 +121,13 @@ function  StartProc_ext(app)
         MD(3).PinState = [app.P1_3.Value, app.P2_3.Value, app.P3_3.Value, app.P4_3.Value, app.P5_3.Value, app.P6_3.Value, app.P7_3.Value, app.P8_3.Value]; %Define array of pin value objects (objects that indicate on or off state)
         MD(3).ArdP = [app.AP1_3.Value, app.AP2_3.Value, app.AP3_3.Value, app.AP4_3.Value, app.AP5_3.Value, app.AP6_3.Value, app.AP7_3.Value, app.AP8_3.Value]; %Define array of arduino pin value objects (objects that indicate arduino pin for pogo-pin)
         % Save figure handles to CV plots for each hotplate (in a structure array of objects). Access CV plot 3 in MU 1 with: MD(1).Plots.CVhandle(3).
-        MD(1).Plots.CV = [app.CV1_1,app.CV2_1,app.CV3_1,app.CV4_1,app.CV5_1,app.CV6_1,app.CV7_1,app.CV8_1];
-        MD(2).Plots.CV = [app.CV1_2,app.CV2_2,app.CV3_2,app.CV4_2,app.CV5_2,app.CV6_2,app.CV7_2,app.CV8_2];
-        MD(3).Plots.CV = [app.CV1_3,app.CV2_3,app.CV3_3,app.CV4_3,app.CV5_3,app.CV6_3,app.CV7_3,app.CV8_3];
+        MD_plot(1).Plots.CV = [app.CV1_1,app.CV2_1,app.CV3_1,app.CV4_1,app.CV5_1,app.CV6_1,app.CV7_1,app.CV8_1];
+        MD_plot(2).Plots.CV = [app.CV1_2,app.CV2_2,app.CV3_2,app.CV4_2,app.CV5_2,app.CV6_2,app.CV7_2,app.CV8_2];
+        MD_plot(3).Plots.CV = [app.CV1_3,app.CV2_3,app.CV3_3,app.CV4_3,app.CV5_3,app.CV6_3,app.CV7_3,app.CV8_3];
         % Save figure handles to derivative plots for each hotplate
-        MD(1).Plots.CVby2=[app.byC2_1_1,app.byC2_2_1,app.byC2_3_1,app.byC2_4_1,app.byC2_5_1,app.byC2_6_1,app.byC2_7_1,app.byC2_8_1]; %Define array of plot objects for CV & 1/C^2 vs. V curves
-        MD(2).Plots.CVby2=[app.byC2_1_2,app.byC2_2_2,app.byC2_3_2,app.byC2_4_2,app.byC2_5_2,app.byC2_6_2,app.byC2_7_2,app.byC2_8_2];
-        MD(3).Plots.CVby2=[app.byC2_1_3,app.byC2_2_3,app.byC2_3_3,app.byC2_4_3,app.byC2_5_3,app.byC2_6_3,app.byC2_7_3,app.byC2_8_3];
+        MD_plot(1).Plots.CVby2=[app.byC2_1_1,app.byC2_2_1,app.byC2_3_1,app.byC2_4_1,app.byC2_5_1,app.byC2_6_1,app.byC2_7_1,app.byC2_8_1]; %Define array of plot objects for CV & 1/C^2 vs. V curves
+        MD_plot(2).Plots.CVby2=[app.byC2_1_2,app.byC2_2_2,app.byC2_3_2,app.byC2_4_2,app.byC2_5_2,app.byC2_6_2,app.byC2_7_2,app.byC2_8_2];
+        MD_plot(3).Plots.CVby2=[app.byC2_1_3,app.byC2_2_3,app.byC2_3_3,app.byC2_4_3,app.byC2_5_3,app.byC2_6_3,app.byC2_7_3,app.byC2_8_3];
         % Preallocate the data structure arrays based on the max number of iterations maxnbIt and the number of points from the analyzer L (check whether constant)
         %MD(MUnb).ExpData.Pin(p).C = zeros(L,maxnbIt);
         %MD(MUnb).ExpData.Pin(p).R = zeros(L,maxnbIt);
@@ -149,7 +149,7 @@ function  StartProc_ext(app)
             % Initialize end bias time log vector
             MD(mu).ExpData.log.endBiasTime = [];
             for i=1:length(MD(mu).PinState) %For all pins, set parameters to null
-                set(MD(mu).Plots.CV(i), 'ColorOrder', jet((app.Iter_tot_gnl.Value+1)*MD(mu).ExpData.Setup.IterM)); %Define color order for plotting based on % of iterations
+                set(MD_plot(mu).Plots.CV(i), 'ColorOrder', jet((app.Iter_tot_gnl.Value+1)*MD(mu).ExpData.Setup.IterM)); %Define color order for plotting based on % of iterations
                 MD(mu).ExpData.Pin(i).C  = []; % Capacitance read from the impedance analyzer
                 MD(mu).ExpData.Pin(i).R=[]; % Resistance read from the impedance analyzer
                 MD(mu).ExpData.Pin(i).V = []; % Voltage read from the impedance analyzer
@@ -175,17 +175,17 @@ function  StartProc_ext(app)
         % Graph handles
         drawnow;
         % Temp vs time plot handles
-        MD(1).Plots.Temp=app.TempTime_1;
-        MD(2).Plots.Temp=app.TempTime_2;
-        MD(3).Plots.Temp=app.TempTime_3;
+        MD_plot(1).Plots.Temp=app.TempTime_1;
+        MD_plot(2).Plots.Temp=app.TempTime_2;
+        MD_plot(3).Plots.Temp=app.TempTime_3;
         %% Current vs time plot handles
-        MD(1).Plots.Current=app.It_1;
-        MD(2).Plots.Current=app.It_2;
-        MD(3).Plots.Current=app.It_3;
+        MD_plot(1).Plots.Current=app.It_1;
+        MD_plot(2).Plots.Current=app.It_2;
+        MD_plot(3).Plots.Current=app.It_3;
         %% Vfb vs time plot handles
-        MD(1).Plots.VfbTime=app.VFBtime_1;
-        MD(2).Plots.VfbTime=app.VFBtime_2;
-        MD(3).Plots.VfbTime=app.VFBtime_3;
+        MD_plot(1).Plots.VfbTime=app.VFBtime_1;
+        MD_plot(2).Plots.VfbTime=app.VFBtime_2;
+        MD_plot(3).Plots.VfbTime=app.VFBtime_3;
 
         %% Unit parameters
         % Prebias time
@@ -339,8 +339,8 @@ function  StartProc_ext(app)
             MD(mu).MDdata.cycle_counter=0; % Number of cycles performed (= number of bias iterations)
             MD(mu).MDdata.bias_on_flag=0; % Flag indicating that bias is on (used in stress_completed_ext
             % Hold all graphs
-            hold(MD(mu).Plots.Temp,'on')
-            hold(MD(mu).Plots.Current,'on')
+            hold(MD_plot(mu).Plots.Temp,'on')
+            hold(MD_plot(mu).Plots.Current,'on')
         end
         app.stopFlag=0; % Flag to stop while loop
 
@@ -348,13 +348,12 @@ function  StartProc_ext(app)
         tic; %Start recording time during measurement (logvalues_ext)
         
         % Take an IV measurement on each pin
-        MD=IVmeas(app,MD);
-        
-        message_IV='Initial IV measurement completed on all pins';
-        logMessage(app,message_IV);
+        %MD=IVmeas(app,MD);
+        %message_IV='Initial IV measurement completed on all pins';
+        % logMessage(app,message_IV);
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% RUN PROCESS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        CV_timeLoop(app,MD,Prog_CV);
+        CV_timeLoop(app,MD,MD_plot,Prog_CV);
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         %                 %After completed meaurement

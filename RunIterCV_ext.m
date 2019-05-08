@@ -1,4 +1,4 @@
-function MD = RunIterCV_ext(app,CVprogram,LampSet,LampColor,MUnb,MD)
+function MD = RunIterCV_ext(app,CVprogram,LampSet,LampColor,MUnb,MD,MD_plot)
 % RunIterCV_ext
 % Run Iterative CV Measurement
 % Parameters
@@ -67,8 +67,8 @@ for p = 1:length(PinState) %For each pin
                 MD(MUnb).ExpData.Pin(p).C = [MD(MUnb).ExpData.Pin(p).C Cmeas]; %Save capacitance data in pin struct
                 MD(MUnb).ExpData.Pin(p).R = [MD(MUnb).ExpData.Pin(p).R Rmeas]; %Save resistance data in pin struct
                 MD(MUnb).ExpData.Pin(p).V = [MD(MUnb).ExpData.Pin(p).V Vmeas]; %Save voltage data in pin struct (% Check in this line that Vmeas format is right)
-                % TO DO: make sure the curves are plotted in the correct CV window. CVPlots are defined at the beginning of StartProc. app.CV1_3, app.CV2_3, app.CV3_3, app.CV4_3, app.CV5_3 for MU3.
-                MD=PlotCV_ext(app,MD(MUnb).ExpData.Pin(p).C, MD(MUnb).ExpData.Pin(p).V, MD(MUnb).Plots.CV(p), MD, MUnb); %Plot CV curve and temperature
+                % CVPlots are defined at the beginning of StartProc. app.CV1_3, app.CV2_3, app.CV3_3, app.CV4_3, app.CV5_3 for MU3.
+                MD=PlotCV_ext(app,MD(MUnb).ExpData.Pin(p).C, MD(MUnb).ExpData.Pin(p).V, MD_plot(MUnb).Plots.CV(p), MD, MUnb); %Plot CV curve and temperature
             end
             
             % After each pin has been measured, check:
@@ -111,7 +111,7 @@ end
 message_finishflag=['Status of finish flag in RunIterCV: ',num2str(MD(MUnb).MDdata.finish_flag),' in unit',num2str(MUnb)];
 logMessage(app,message_finishflag);
 
-MD=FlatbandFitting_ext(app, MD, MUnb); %Fit flatband for pin
+MD=FlatbandFitting_ext(app, MD, MD_plot, MUnb); %Fit flatband for pin
 % End of function
 
 clear Arduino
