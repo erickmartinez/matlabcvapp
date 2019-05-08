@@ -34,6 +34,7 @@ h=figure(MUnb);
 pinArray1Color={[0.5 0.74 0.98],[0.9 0.87 0.53],[0.59 0.92 0.56],[0.89 0.5 0.7]}; % Cell array containing the colors for each clean pin (light blue, light yellow, light green, light pink)
 for i=1:length(pinArray1)
     tfb=MD.ExpData.Pin(pinArray1(i)).tfb;
+    C=MD.ExpData.Pin(pinArray1(i)).C;
     VfbAve=MD.ExpData.Pin(pinArray1(i)).VfbAve;
     VfbAve_shift=VfbAve(:)-VfbAve(1); % Flatband shift more meaningful to plot as different samples may have different absolute flatband values
     VfbStd=MD.ExpData.Pin(pinArray1(i)).VfbStd;
@@ -63,6 +64,7 @@ pinArray2Color={[0.1 0.32 0.53],[0.76 0.7 0.08],[0.22 0.45 0.19],[0.58 0.137 0.4
 
 for i=1:length(pinArray2)
     tfb=MD.ExpData.Pin(pinArray2(i)).tfb;
+    C=MD.ExpData.Pin(pinArray1(i)).C;
     VfbAve=MD.ExpData.Pin(pinArray2(i)).VfbAve;
     VfbAve_shift=VfbAve(:)-VfbAve(1); % Flatband shift more meaningful to plot as different samples may have different absolute flatband values
     VfbStd=MD.ExpData.Pin(pinArray2(i)).VfbStd;
@@ -124,8 +126,11 @@ box on
 ylabel({'Real flatband voltage shift','of contaminated samples (V)'});
 xlabel("Time (hrs)");
 
-% save(filepath+"_cont_minus_clean");
-if(strcmp(save_plot,'yes'))
+T12VfbPinAveShift=VfbPinAve_diff;
+T1T2VfbAveStd=VfbStd_tot;
+
+save(filepath+"_cont_minus_clean",'T12VfbPinAveShift','tfb','T1T2VfbAveStd','C');
+if(strcmp(save_plot,'save_figures'))
 savefig(h,filepath+"_cont_minus_clean");
 end
     
