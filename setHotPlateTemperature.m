@@ -83,6 +83,7 @@ function [success] = setHotPlateTemperature(app,hotplateNumber,...
                 fwrite(h,q(i),'uint8'); % Write to hotplate
                 pause(.05);
             end
+            pause(0.1);
             %Read out hotplate response
             out = fread(h,6); 
             flushoutput(h); % removes data from the output buffer
