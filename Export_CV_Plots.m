@@ -168,7 +168,8 @@ end
                 end
             end % pinStates(q) ends 
         end % q = 1:totalPlots ends
-
+        
+        try
         % Get the working directory from the GUI
         wd = app.FileLoc.Value;
         % Get a timestamp to add to the file tags
@@ -177,6 +178,9 @@ end
         filetag1 = "Figure_MU"+k+"_CV1" + tstamp;
         filetag2 = "Figure_MU"+k+"_CV2" + tstamp;
         %Save the figures as .fig and .jpeg
+        catch e
+            display(e.message);
+        end
         try
             savefig(figureCV1,fullfile(wd,strcat(filetag1,'.fig')));
             savefig(figureCV2,fullfile(wd,strcat(filetag2,'.fig')));
