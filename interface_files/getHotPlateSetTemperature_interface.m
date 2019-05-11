@@ -1,36 +1,35 @@
-function [status] = getHotPlateTemperatureStatus(h,failedCalls)
-% getHotPlateTemperatureStatus
-% Gives the set temperature status of the hotplate
+function [setTemperature] = getHotPlateSetTemperature_interface(h,failedCalls)
+% getHotPlateSetTemp
+% Gives the set temperature on the hotplate
 % Parameters
 % ----------
 % h: obj 
 %   The serial connection to the hotplate
 % failedCalls : int
 %   The number of times the function has been called and produced an error
-%  
+% 
 % Returns
 % -------
-% status : bool
-%   The status of the temperature (0: open, 1:close) 
-%   open:heating, close:off
-
+% setTemperature : float
+%   The set temperature of the hotplate in °C
 
     % From SCILOGEX
-    % Section 3.2 Get information
+    % Section 3.3 Get status
     %
     % Command:
     % -------------------------------------------------------
     %  1   | 2    | 3    | 4    | 5    | 6
     % -------------------------------------------------------
-    % 0xfe | 0xA1 | NULL | NULL | NULL | Check sum
+    % 0xfe | 0xA2 | NULL | NULL | NULL | Check sum
     % -------------------------------------------------------
     % Response:
     % -------------------------------------------------------
     %  1   | 2    | 3,4,5,6,7,8,9,10 | 11  
     % -------------------------------------------------------
-    % 0xfd | 0xA1 | Parameter1... 8  | Check sum
+    % 0xfd | 0xA2 | Parameter1... 8  | Check sum
     % -------------------------------------------------------
-    % Parameter3: temperature status (0: closed, 1: open)
+    % Parameter5: temp set (high)
+    % Parameter6: temp set (low)
     
     MAX_FAILED_CALLS = 20;
     % If failedCalls not int the arguments failedCalls = 0
@@ -38,7 +37,8 @@ function [status] = getHotPlateTemperatureStatus(h,failedCalls)
         failedCalls = 0;
     end
     
-    q           = [254,161,0,0,0];
+    % Get the handle to the hotplate
+    q           = [254,162,0,0,0];
     checksum    = mod(sum(q(2:end)),256);
     q           = [q, checksum];
     try 
@@ -51,30 +51,38 @@ function [status] = getHotPlateTemperatureStatus(h,failedCalls)
         flushinput(h); % removes data from the input buffer associated with obj.
         if ~isempty(out)
             % Get the value of the set temp HT and LT from the hotplate
-            status = out(5);
+            tHL = out(7:8);
+            % Transform the value into decimal
+            val = 0;
+            N = length(tHL);
+            for i=1:N
+                val = val + 256^(N-i)*tHL(i);
+            end
+            setTemperature = val/10;  
         else
-            fprintf("Error reading temperature status of hotplate\n");
+            fprintf("Error reading set temperature of hotplate\n");
+            failedCalls = failedCalls + 1;
             % Retry (unless maximu number of attemps has been reached)
             if failedCalls <= MAX_FAILED_CALLS
                 fprintf("Trying again...\n");
                 pause(0.1);
-                status = getHotPlateTemperatureStatus(h,failedCalls);
+                setTemperature = getHotPlateSetTemperature(h,failedCalls);
             else
-                error("Exceeded number of attempts to get temperature status.");
+                error("Exceeded number of attempts to get set temperature.");
             end
         end
     catch e
-        fprintf("Error retriving the temperature status on hotplate.\n");
+        fprintf("Error retriving the set temperature on hotplate\n");
         display(e.message);
+        
         failedCalls = failedCalls + 1;
         % Retry (unless maximu number of attemps has been reached)
         if failedCalls <= MAX_FAILED_CALLS
             fprintf("Trying again...\n");
             pause(0.1);
-            status = getHotPlateSetTemperature(h,failedCalls);
+            setTemperature = getHotPlateSetTemperature(h,failedCalls);
         else
-            error("Exceeded number of attempts to get temperature status.");
+            error("Exceeded number of attempts to get set temperature.");
         end
     end
-    
 end

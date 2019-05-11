@@ -1,4 +1,4 @@
-function [success] = setHotPlateTemperature(h,temperature,failedCalls)
+function [success] = setHotPlateTemperature_interface(h,temperature,failedCalls)
 % setHotPlateTemperature
 % Sends the temperature setpoint to the hotplate
 % Parameters
