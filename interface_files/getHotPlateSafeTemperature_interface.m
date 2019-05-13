@@ -1,4 +1,4 @@
-function [safeTemperature] = getHotPlateSafeTemperature(h,failedCalls)
+function [safeTemperature] = getHotPlateSafeTemperature_interface(h,failedCalls)
 % getHotPlateSafeTemperature
 % Gives the safe temperature on the hotplate
 % Parameters

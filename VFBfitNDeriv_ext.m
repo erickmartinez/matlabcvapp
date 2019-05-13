@@ -30,6 +30,7 @@ MD(MUnb).ExpData.Pin(p).VfbStd = [];
 hold(PlotCVby2_p, 'off')
 plot(PlotCVby2_p,[],[],'LineWidth',2)
 hold(PlotCVby2_p, 'on')
+
 for j = 1:m*IterM % Parse through all CV data for pin
     Ci=interp1(Vs(:,j),Cs(:,j),Vi,'spline'); % Interpolate CV data
     Cby2 = 1./(Ci./max(Ci)).^2; %Define normalized 1/C^2
@@ -38,7 +39,7 @@ for j = 1:m*IterM % Parse through all CV data for pin
     Cby2cut = Cby2(Cby2<10); %Concatenate 1/C^2 to remove noisy data (Capacitance)
     d1Cby1 = ((diff(Cby2cut,1))./diff(Vicut,1)); %Take derivative of non-noisy interpolated CV data
     
-    [mind1Cby1 minInd1] = min(d1Cby1); %Find minumum point of 1/C^2 derivative
+    [mind1Cby1, minInd1] = min(d1Cby1); %Find minumum point of 1/C^2 derivative
     d2Cby2 = (diff(d1Cby1)./diff(Vicut(1:end-1))); %Take second derivative of 1/C^2
     
     VExtract = Vicut(minInd1+2:end); %Concatenate voltage to data above 1st derivative minimum (removes noise data further 2nd derivative data)
@@ -47,19 +48,20 @@ for j = 1:m*IterM % Parse through all CV data for pin
     MD(MUnb).ExpData.Pin(p).Vfit = [MD(MUnb).ExpData.Pin(p).Vfit VExtract]; %Save non-noisy 2nd derivative voltage array
     MD(MUnb).ExpData.Pin(p).Cfit = [MD(MUnb).ExpData.Pin(p).Cfit Cby2Extract]; %Save non-noisy 2nd capacitance voltage array
     
-    [maxd2Cby2 maxInd2] = max(Cby2Extract); %Find max peak position or index
+    [maxd2Cby2, maxInd2] = max(Cby2Extract); %Find max peak position or index
     MD(MUnb).ExpData.Pin(p).Vfb = [MD(MUnb).ExpData.Pin(p).Vfb VExtract(maxInd2)]; %Define flatband as voltage as that peak
     Vfb = MD(MUnb).ExpData.Pin(p).Vfb; %Save Vfb variable
-    
-    try
-        plot(PlotCVby2_p,Vicut(minInd1:end-2),d2Cby2(minInd1:end),'LineWidth',2); %Plot non-noisy 2nd derivative 1/C^2 data
-        plot(PlotCVby2_p,Vfb(end),maxd2Cby2,'k*','LineWidth',1); %Show fitted flatband peak in plot
-        ylim([-inf,0]) %Assuming Vfb is below zero, limit yscale for plot from -infinity to 0
-    catch e
-        msg = sprintf('Error plotting in VFBfitNDeriv:\n%s',e.message);
-        logMessage(app,msg);
-    end
 end
+
+try
+    plot(PlotCVby2_p,Vicut(minInd1:end-2),d2Cby2(minInd1:end),'LineWidth',2); %Plot non-noisy 2nd derivative 1/C^2 data
+    plot(PlotCVby2_p,Vfb(end),maxd2Cby2,'k*','LineWidth',1); %Show fitted flatband peak in plot
+    ylim([-inf,0]) %Assuming Vfb is below zero, limit yscale for plot from -infinity to 0
+catch e
+    msg = sprintf('Error plotting the second derivative in VFBfitNDeriv, unit %d, pin %d:\n%s',MUnb,p,e.message);
+    logMessage(app,msg);
+end
+
 hold(PlotCVby2_p, 'off')
 
 %Since many CV measurements may be taken for time point,

@@ -62,6 +62,13 @@ function  StartProc_ext(app)
         app.P1Lamp_3.Color = [.9, .9, .9]; app.P2Lamp_3.Color = [.9, .9, .9]; app.P3Lamp_3.Color = [.9, .9, .9]; app.P4Lamp_3.Color = [.9, .9, .9];
         app.P5Lamp_3.Color = [.9, .9, .9]; app.P6Lamp_3.Color = [.9, .9, .9]; app.P7Lamp_3.Color = [.9, .9, .9]; app.P8Lamp_3.Color = [.9, .9, .9];
 
+        % Check whether bias must be applied to all pins or not
+        value_biaspins = app.Bias5to8.Value;
+        if(value_biaspins)
+            app.BiasPinState=[0 0 0 0 1 1 1 1]; % Steady-state bias only on pins 5 to 8
+        else
+            app.BiasPinState=[1 1 1 1 1 1 1 1]; % Steady-state bias on all pins
+        end
 
         %% CV Program Definition for Impedance Anlayzer
         if (app.Sweep_gnl.Value == "Down")
