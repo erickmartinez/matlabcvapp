@@ -1,5 +1,6 @@
 function MD=FlatbandFitting_ext(app, MD, MD_plot, MUnb)
-VfbTimePlotColors = ["bo-","yo-","go-","mo-","b+-","y+-","g+-","m+-"]; % To change
+% VfbTimePlotColors = ["bo-","yo-","go-","mo-","b+-","y+-","g+-","m+-"]; % To change
+pinArrayColor={[0.5 0.74 0.98],[0.9 0.87 0.53],[0.59 0.92 0.56],[0.89 0.5 0.7],[0.1 0.32 0.53],[0.76 0.7 0.08],[0.22 0.45 0.19],[0.58 0.137 0.4]}; % Light colors for pins 1 to 4 (clean), dark colors for pins 5 to 8 (contaminated)
 IterM = MD(MUnb).ExpData.Setup.IterM; %Set # of measurements per interation
 PinState=MD(MUnb).PinState;
 DerPeaks=MD(MUnb).ExpData.Setup.DerPeaks;
@@ -32,11 +33,11 @@ for p=1:length(PinState) %For all pins
             if (stressbiastime == 0) %If no time increment (repeating CV). Will plot simply as a function of the number of cycles
                 m = size(MD(MUnb).ExpData.Pin(p).C,2)/IterM; % Number of cycles so far
                 MD(MUnb).ExpData.Pin(p).tfb  = (0:m); %Set x-axis ("time") increment for # of measurements
-                plot(MD_plot(MUnb).Plots.VfbTime, MD(MUnb).ExpData.Pin(p).tfb, MD(MUnb).ExpData.Pin(p).VfbAve, VfbTimePlotColors(p),'LineWidth',2)
+                plot(MD_plot(MUnb).Plots.VfbTime, MD(MUnb).ExpData.Pin(p).tfb, MD(MUnb).ExpData.Pin(p).VfbAve, 'Color', pinArrayColor{p},'Marker','+','LineWidth',2)
                 app.VFBtime_1.XLabel.String = "# of Sweeps"; %Change flatband voltage x-axis title
                 app.VFBtime_1.Title.String = "Flatband Voltage Vs. Number of Sweeps";
             else
-                plot(MD_plot(MUnb).Plots.VfbTime, MD(MUnb).ExpData.Pin(p).tfb/3600, MD(MUnb).ExpData.Pin(p).VfbAve, char(VfbTimePlotColors(p)),'LineWidth',2,'MarkerFaceColor',[1,1,1]) %Plot Average Vfb vs. time % tfb defined in VFBfitNDeriv_ext. Note that tfb is not defined for the case of linear fitting
+                plot(MD_plot(MUnb).Plots.VfbTime, MD(MUnb).ExpData.Pin(p).tfb/3600, MD(MUnb).ExpData.Pin(p).VfbAve, 'Color', pinArrayColor{p},'Marker','+','LineWidth',2,'MarkerFaceColor',[1,1,1]) %Plot Average Vfb vs. time % tfb defined in VFBfitNDeriv_ext. Note that tfb is not defined for the case of linear fitting
                 app.VFBtime_1.XLabel.String = "Time (hr)";
                 app.VFBtime_1.Title.String = "Flatband Voltage Vs. Time";
                 hold(MD_plot(MUnb).Plots.VfbTime,'on')
