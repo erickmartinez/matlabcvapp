@@ -46,11 +46,11 @@ for p=1:length(PinState) %For all pins
         t_off = tInSec(app, string(MD(MUnb).ExpData.Setup.t_offset_unit), MD(MUnb).ExpData.Setup.t_offset_value); % Define time-Offset in seconds
         MD(MUnb).ExpData.Pin(p).tfb = 0:stressbiastime:((m-1)*stressbiastime); % Set flatband time array (dtime is the stressbiastime in second, to define in startproc
         MD(MUnb).ExpData.Pin(p).tfb = MD(MUnb).ExpData.Pin(p).tfb + t_off; % Add time-offset
-        msg = sprintf('Error finding flatband from second derivative in VFBfitNDeriv. Wrong Vfb value in unit %d, pin %d at t= %0.3f hours. Turning pin off. Error message: \n%s',MUnb, p, num2str(MD(MUnb).ExpData.Pin(p).tfb(end)/3600), e.message);
+        msg = sprintf('Error finding flatband from second derivative in VFBfitNDeriv. Wrong Vfb value in unit %d, pin %d at t= %0.3f hours. Turning pin off. Error message: \n%s',MUnb, p, MD(MUnb).ExpData.Pin(p).tfb(end)/3600, e.message);
         logMessage(app,msg);
         % Set PinState to 0 for the corresponding pin and turn it off
         MD(MUnb).PinState(p)=0;
-        arduinoTurnPinOff(app,MUnb,ArdPins(p));
+        arduinoTurnPinOff(app,MUnb,MD(MUnb).ArdP(p));
     end
 
 end
