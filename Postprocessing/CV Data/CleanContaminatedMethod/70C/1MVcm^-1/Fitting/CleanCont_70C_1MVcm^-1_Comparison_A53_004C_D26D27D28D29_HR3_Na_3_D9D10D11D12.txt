@@ -1,6 +1,0 @@
-Data File:Final Diffusivity (cm^2/s): 6.919e-18
-
-Final Solubulity (#/cm^3): 2.767596973860084e+17
-
-Final Mean Squared Error: 0.042838
-
