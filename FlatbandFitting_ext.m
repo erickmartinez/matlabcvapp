@@ -1,6 +1,6 @@
 function MD=FlatbandFitting_ext(app, MD, MD_plot, MUnb)
 % VfbTimePlotColors = ["bo-","yo-","go-","mo-","b+-","y+-","g+-","m+-"]; % To change
-pinArrayColor={[0.5 0.74 0.98],[0.9 0.87 0.53],[0.59 0.92 0.56],[0.89 0.5 0.7],[0.1 0.32 0.53],[0.76 0.7 0.08],[0.22 0.45 0.19],[0.58 0.137 0.4]}; % Light colors for pins 1 to 4 (clean), dark colors for pins 5 to 8 (contaminated)
+pinArrayColor={[0.5 0.74 0.98],[0.9 0.87 0.53],[0.59 0.92 0.56],[0.89 0.5 0.7],[0.1 0.32 0.53],[0.76 0.7 0.08],[0.22 0.45 0.19],[0.58 0.137 0.4]}; % Blue, yellow, green, pink. Light colors for pins 1 to 4 (clean), dark colors for pins 5 to 8 (contaminated)
 IterM = MD(MUnb).ExpData.Setup.IterM; %Set # of measurements per interation
 PinState=MD(MUnb).PinState;
 DerPeaks=MD(MUnb).ExpData.Setup.DerPeaks;
